@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>Дипломний проект.</title>
+    <link href="{% static 'Shop/style.css' %}" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('{% static "Shop/img/back1.jpg" %}');
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrapper">
+
+        <div class="header">
+            <ul id="logo1">
+                <li id="logo2"><a id="logo3" href="{% url 'index' %}">Main</a></li>
+                <li id="logo2"><a id="logo3" href="#">Shop</a></li>
+                <li id="logo2"><a id="logo3" href="#">About</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'admin:index' %}">Admin</a></li>
+            </ul>
+        </div>
+
+        <div class="logo">
+
+            <img id="logo_img" src="https://cdn.shopify.com/s/files/1/0411/9216/1431/files/SEDIMAT_e-shop_1e7ef541-75d6-4d59-8fe9-72b834dc94d5.png?v=1600772959">
+
+
+
+        </div>
+        <div class="center">
+
+            <div class="cont">
+
+            {% block content %}
+
+
+
+            {% endblock %}
+
+            </div>
+
+            <div class="navigation">
+
+            </div>
+        </div>
+
+
+        <div class="footer">
+            <ul id="logo1">
+                <li id="logo2"><a id="logo3" href="#">Main</a></li>
+                <li id="logo2"><a id="logo3" href="#">Shop</a></li>
+                <li id="logo2"><a id="logo3" href="#">About</a></li>
+                <li id="logo2"><a id="logo3" href="#">Contact</a></li>
+            </ul>
+        </div>
+
+    </div>
+
+</body></html>
+

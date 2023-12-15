@@ -1,0 +1,134 @@
+body {
+    background-image: url('img/back1.jpg'); /* Шлях до вашого зображення */
+    background-size: cover; /* Розмір зображення покриває весь екран */
+    background-position: center; /* Центрує зображення по горизонталі та вертикалі */
+    background-repeat: no-repeat; /* Запобігає повторенню зображення */
+    background-attachment: fixed; /* Зафіксовує фонове зображення при прокрутці сторінки */
+    padding: 0px;
+    margin: 0px;
+}
+
+.wrapper {
+    padding: 0px;
+    margin: 0px;
+
+}
+
+.header {
+    border-radius: 0px 0px 20px 20px;
+    background-color: black;
+    width: 100%;
+    height: 80px;
+}
+
+#logo1 {
+    list-style-type: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+#logo2 {
+    float: left;
+    margin: 20px 0px 0px 15%;
+    padding: 0px 3% 0px 0px;
+}
+
+#logo3 {
+    color: azure;
+    font-size: 20px;
+    text-decoration: none;
+    font-family: sans-serif;
+}
+
+.logo {
+    margin: auto;
+    width: 1200px;
+    height: 200px;
+}
+
+#logo_img {
+    margin: 10px;
+    border-radius: 20px;
+    height: 90%;
+}
+
+.center {
+    margin: auto;
+    width: 1200px;
+
+}
+
+.cont {
+    background-color: #29140dDD;
+    margin: 0px;
+    width: 900px;
+    min-height: 1000px;
+    float: left;
+
+}
+
+.navigation {
+    background-color: #361105DD;
+    width: 300px;
+    min-height: 1000px;
+    float: left;
+
+}
+
+.footer {
+    clear: both;
+    border-radius: 20px 20px 0px 0px;
+    background-color: black;
+    width: 100%;
+    height: 160px;
+    flex-shrink: 0;
+    margin-top: auto;
+}
+
+.post {
+    clear: both;
+    width: 100%;
+}
+
+#teg {
+    border-radius: 15px;
+    background-color: orangered;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 30px 10px 30px;
+    color: azure;
+    font-family: sans-serif;
+    float: left;
+}
+
+#post_img {
+    clear: both;
+    padding: 0px 0px 0px 10px;
+    width: 98%;
+
+}
+
+hr {
+    clear: both;
+    margin: 0px 0px 60px 0px;
+}
+
+#avat {
+    float: left;
+    width: 64px;
+    border-radius: 15px;
+    margin: 15px 20px 0px 15px;
+}
+
+#user {
+    color: azure;
+    font-family: sans-serif;
+    margin: 0px 0px 0px 0px;
+    padding: 50px 0px 0px 0px;
+
+}
+
+br {
+    clear: both;
+    padding: 0px;
+    margin: 0px;
+}
