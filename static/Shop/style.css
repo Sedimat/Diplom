@@ -132,3 +132,32 @@ br {
     padding: 0px;
     margin: 0px;
 }
+
+.form-label{
+    color: azure;
+    font-family: sans-serif;
+    font-size: 24px;
+    margin: 10px;
+}
+.form-control{
+    border-radius: 5px;
+    margin: 10px;
+    width: 90%;
+    height: 25px;
+}
+
+.rega{
+    background-color: lightgreen;
+    border-radius: 7px;
+    margin: 10px;
+    width: 93%;
+    height: 25px;
+}
+
+.avatar{
+    float: left;
+    border-radius: 15px;
+    margin: 10px;
+    width: 100px;
+
+}

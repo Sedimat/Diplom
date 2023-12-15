@@ -19,8 +19,8 @@
 
         <div class="header">
             <ul id="logo1">
-                <li id="logo2"><a id="logo3" href="{% url 'index' %}">Main</a></li>
-                <li id="logo2"><a id="logo3" href="#">Shop</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'index' %}">Головна</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'user' %}">Користувач</a></li>
                 <li id="logo2"><a id="logo3" href="#">About</a></li>
                 <li id="logo2"><a id="logo3" href="{% url 'admin:index' %}">Admin</a></li>
             </ul>
@@ -46,6 +46,12 @@
             </div>
 
             <div class="navigation">
+
+                {% block content1 %}
+
+
+
+                {% endblock %}
 
             </div>
         </div>

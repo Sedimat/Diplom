@@ -1,0 +1,17 @@
+{% extends "Shop/base.html" %}
+
+{% block content1 %}
+
+<form class="navbar-form navbar-right" method="POST" role="form" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    <label for="username0" class="form-label">Ваш нікнейм</label>
+    <input type="text" class="form-control" name="username" id="username0" placeholder="Ваш нікнейм">
+
+    <label for="password0" class="form-label">Пароль</label>
+    <input type="password" class="form-control" name="password" id="password0" placeholder="Пароль">
+
+    <button type="submit" class="rega">Війти</button>
+</form>
+
+{% endblock %}

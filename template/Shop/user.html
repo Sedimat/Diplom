@@ -1,0 +1,58 @@
+{% extends "Shop/base.html" %}
+
+{% block content1 %}
+
+{% if user.is_authenticated %}
+
+<img class="avatar" src="{{ info.avatar.url }}" width="100">
+<p class="form-label" >{{ user.username }}</p>
+<a href="{% url 'logout' %}" class="rega">Вийти</a>
+<h2 class="form-label">{{ text }}</h2>
+
+{% else %}
+
+<form class="navbar-form navbar-right" method="POST" role="form" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    <label for="username0" class="form-label">Ваш нікнейм</label>
+    <input type="text" class="form-control" name="username" id="username0" placeholder="Ваш нікнейм">
+
+    <label for="password0" class="form-label">Пароль</label>
+    <input type="password" class="form-control" name="password" id="password0" placeholder="Пароль">
+
+    <button type="submit" class="rega">Війти</button>
+</form>
+
+
+<h2>{{ a }}</h2>
+
+<form enctype="multipart/form-data" action="{% url 'user' %}" method="POST">
+    {% csrf_token %}
+
+    <label for="username" class="form-label">Ваш нікнейм</label>
+    <input type="text" class="form-control" name="username" id="username" placeholder="Ваш нікнейм">
+
+    <label for="email" class="form-label">Емейл</label>
+    <input type="email" class="form-control" name="email" id="email" placeholder="Електрона пошта">
+
+    <label for="password1" class="form-label">Пароль</label>
+    <input type="password" class="form-control" name="password1" id="password1" placeholder="Пароль">
+
+    <label for="password2" class="form-label">Підтвердження</label>
+    <input type="password" class="form-control" name="password2" id="password2" placeholder="Підтвердження">
+
+    <label for="avatar0" class="form-label">Аватарка</label>
+    <input type="file" class="form-control" name="avatar" id="avatar0" placeholder="Аватарка">
+
+    <label for="phone0" class="form-label">Телефон</label>
+    <input type="text" class="form-control" name="phone" id="phone0" placeholder="Телефон">
+
+    <label for="address0" class="form-label">Адреса</label>
+    <input type="text" class="form-control" name="address" id="address0" placeholder="Адреса">
+
+    <button type="submit" class="rega">Зареєструватись</button>
+</form>
+
+{% endif %}
+
+{% endblock %}
