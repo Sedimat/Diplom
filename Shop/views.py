@@ -1,9 +1,9 @@
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import UserRegistrationForm, UserProfileForm
-from .models import UserProfile
+from .models import UserProfile, Products, ImgProduct
 
 
 # Create your views here.
@@ -17,7 +17,25 @@ def UserInfo(user):
 
 
 def index(request):
-    return render(request, 'Shop/index.html')
+    product = Products.objects.all().order_by("-published_date")  # сортує по даті додавання
+    img = ImgProduct.objects.all()
+    context = {
+        "img": img,
+        "product": product
+    }
+    return render(request, 'Shop/index.html', context=context)
+
+def product(request, id=None):
+    product = get_object_or_404(Products, id=id)
+    imgs = ImgProduct.objects.filter(product=product.id)
+    context = {
+        "imgs": imgs,
+        "product": product
+    }
+    return render(request, 'Shop/product.html', context=context)
+
+
+
 
 
 def user(request):

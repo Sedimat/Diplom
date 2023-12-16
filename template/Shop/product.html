@@ -1,0 +1,21 @@
+{% extends "Shop/base.html" %}
+
+{% block content %}
+
+{% if product.imgproduct_set.all %}
+            <img class="product_img_big" src="{{ product.imgproduct_set.first.img.url }}" alt="Зображення поста">
+    {% endif %}
+    <p id="product_txt_big">{{ product.name }}</p>
+    <p id="product_txt_big">{{ product.description }}</p>
+    <p id="product_txt_big">Ціна: {{ product.price }}</p>
+
+<a id="teg" href="#">Добавити в кошик</a>
+
+<div class="imgs">
+{% for im in imgs %}
+    <img class="product_img_min" src="{{ im.img.url }}">
+{% endfor %}
+
+</div>
+
+{% endblock %}

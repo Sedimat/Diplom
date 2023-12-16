@@ -161,3 +161,52 @@ br {
     width: 100px;
 
 }
+
+.product{
+    float: left;
+    border-radius: 5px;
+    background-color: lightyellow;
+    margin: 10px;
+    width: 280px;
+    height: 400px;
+
+}
+.product_img{
+    border-radius: 15px;
+    margin: 10px 0px 10px 10px;
+    width: 260px;
+
+}
+.product_img_big{
+    float: left;
+    border-radius: 15px;
+    margin: 20px 20px 20px 20px;
+    width: 50%;
+
+}
+.product_img_min{
+    float: left;
+    border-radius: 15px;
+    margin: 10px 10px 10px 10px;
+    width: 25%;
+
+}
+
+#product_txt{
+    margin: 0px 20px 0px 20px;
+    font-family: sans-serif;
+}
+
+#product_txt_big{
+    margin: 20px 20px 20px 20px;
+    font-family: sans-serif;
+    font-size: 24px;
+    color: azure;
+}
+
+.imgs{
+    clear: both;
+    width: 99%;
+}
+
+
