@@ -2,12 +2,24 @@ from django.contrib.auth.models import User
 from django.db import models
 
 
-class Products(models.Model):
+class Category(models.Model):
     name = models.CharField(max_length=20, verbose_name="Назва")
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Категорія"
+        verbose_name_plural = "Категорії"
+
+
+class Products(models.Model):
+    name = models.CharField(max_length=50, verbose_name="Назва")
     description = models.TextField(verbose_name="Опис")
     published_date = models.DateTimeField(auto_created=True, verbose_name="Час")
     amount = models.DecimalField(max_digits=10, decimal_places=0, verbose_name="Кількість")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Ціна товару")  # вказує число флоат до коми та після
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, verbose_name="Категорія")
 
     def __str__(self):
         return self.name

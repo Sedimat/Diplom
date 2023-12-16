@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import UserRegistrationForm, UserProfileForm
-from .models import UserProfile, Products, ImgProduct
+from .models import UserProfile, Products, ImgProduct, Category
 
 
 # Create your views here.
@@ -17,9 +17,11 @@ def UserInfo(user):
 
 
 def index(request):
+    category = Category.objects.all()
     product = Products.objects.all().order_by("-published_date")  # сортує по даті додавання
     img = ImgProduct.objects.all()
     context = {
+        "category": category,
         "img": img,
         "product": product
     }
@@ -33,6 +35,16 @@ def product(request, id=None):
         "product": product
     }
     return render(request, 'Shop/product.html', context=context)
+
+def category(request, name=None):
+    cat = get_object_or_404(Category, name=name)
+    product = Products.objects.filter(category=cat.id)
+    category = Category.objects.all()
+    context = {
+        "product": product,
+        "category": category
+    }
+    return render(request, 'Shop/index.html', context=context)
 
 
 

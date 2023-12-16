@@ -1,0 +1,11 @@
+{% block content1 %}
+
+
+{% for cat in category %}
+    <div class="category">
+        <h3 id="category">{{ cat.name }}</h3>
+    </div>
+{% endfor %}
+
+
+{% endblock %}
