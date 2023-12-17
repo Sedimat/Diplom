@@ -29,7 +29,7 @@ body {
 
 #logo2 {
     float: left;
-    margin: 20px 0px 0px 15%;
+    margin: 20px 0px 0px 10%;
     padding: 0px 3% 0px 0px;
 }
 
@@ -59,7 +59,7 @@ body {
 }
 
 .cont {
-    background-color: #29140dDD;
+    background-color: #283A4EDD;
     margin: 0px;
     width: 900px;
     min-height: 1000px;
@@ -68,7 +68,7 @@ body {
 }
 
 .navigation {
-    background-color: #361105DD;
+    background-color: #4B708DDD;
     width: 300px;
     min-height: 1000px;
     float: left;
@@ -89,15 +89,20 @@ body {
     clear: both;
     width: 100%;
 }
+#inp_numb{
+    margin: 10px 10px 10px 10px;
+    padding: 10px 5px 10px 5px;
+    width: 30px;
+
+}
 
 #teg {
     border-radius: 15px;
-    background-color: orangered;
+    background-color: #29ab09;
     margin: 10px 10px 10px 10px;
-    padding: 10px 30px 10px 30px;
+    padding: 15px 30px 15px 30px;
     color: azure;
     font-family: sans-serif;
-    float: left;
 }
 
 #post_img {
@@ -165,17 +170,17 @@ br {
 .product{
     float: left;
     border-radius: 5px;
-    background-color: #121a52;
+    background-color: #071A29;
     margin: 10px 0px 10px 10px;
-    width: 280px;
-    height: 400px;
+    width: 215px;
+    height: 280px;
 
 }
 
 .img_buf{
-    margin: 0px 0px 10px 5px;
-    width: 260px;
-    height: 260px;
+    margin: 0px 0px 10px 0px;
+    width: 200px;
+    height: 200px;
 }
 .product_img{
     border-radius: 15px;
@@ -186,21 +191,38 @@ br {
 .product_img_big{
     float: left;
     border-radius: 15px;
-    margin: 20px 20px 20px 20px;
+    margin: 10px;
     width: 50%;
-
 }
+
+.product_form{
+    float: right;
+    width: 45%;
+}
+.imgs{
+    clear: both;
+    width: 99%;
+}
+
 .product_img_min{
     float: left;
     border-radius: 15px;
-    margin: 10px 10px 10px 10px;
+    margin: 10px 0px 10px 10px;
     width: 25%;
 
 }
+.description{
+    clear: both;
+    width: 90%;
+
+}
+#buf_txt{
+    margin: 10px;
+}
 
 #product_txt{
-    margin: 0px 20px 0px 20px;
     font-family: sans-serif;
+    font-size: 14px;
     color: azure;
 }
 
@@ -211,10 +233,13 @@ br {
     color: azure;
 }
 
-.imgs{
-    clear: both;
-    width: 99%;
+#product_txt_big2{
+    margin: 20px 20px 20px 20px;
+    font-family: sans-serif;
+    font-size: 18px;
+    color: azure;
 }
+
 #category{
     background-color: #361105DD;
     margin: 80px 0px 0px 0px;
@@ -233,3 +258,37 @@ br {
     background-size: 100%;
 }
 
+.table_basket{
+    background-color: #434647;
+    width: 100%;
+    font-family: sans-serif;
+    font-size: 18px;
+    color: azure;
+}
+#sum_left{
+    margin: 10px;
+    float: right;
+    font-family: sans-serif;
+    font-size: 24px;
+    color: azure;
+}
+#del_bask{
+    border-radius: 5px;
+    background-color: orange;
+    padding: 2px 10px 2px 10px;
+    font-family: sans-serif;
+    font-size: 20px;
+    color: azure;
+}
+#tr1{
+    height: 40px;
+    background-color: darkgrey;
+}
+
+#tr2{
+    height: 40px;
+}
+
+td{
+    padding: 0px 0px 0px 10px;
+}

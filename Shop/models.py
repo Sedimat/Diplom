@@ -4,6 +4,7 @@ from django.db import models
 
 class Category(models.Model):
     name = models.CharField(max_length=20, verbose_name="Назва")
+    img_cat = models.ImageField(upload_to='img_category', default='img_category/category.jpg')
 
     def __str__(self):
         return self.name
@@ -53,6 +54,19 @@ class UserProfile(models.Model):
     class Meta:
         verbose_name = "Користувач"
         verbose_name_plural = "Користувачі"
+
+class BufBasket(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Покупець")
+    prod = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name="Товари")
+    quantity = models.PositiveIntegerField(default=1, verbose_name="Кількість")
+
+
+    def __str__(self):
+        return f"{self.user} - {self.prod} - {self.quantity}"
+
+    class Meta:
+        verbose_name = "Корзина"
+        verbose_name_plural = "Корзина"
 
 
 

@@ -2,7 +2,7 @@
 
 {% block content1 %}
 {% for cat in category %}
-    <div class="category">
+    <div class="category" style="background-image: url('{{ cat.img_cat.url }}');">
         <a id="category" href="{% url 'category' name=cat.name %}">{{ cat.name }}</a>
     </div>
 {% endfor %}
@@ -17,37 +17,17 @@
 {% for prod in product %}
 <div class="product">
     {% if prod.imgproduct_set.all %}
-    <div class="img_buf">
+    <div class="img_buf" >
         <img class="product_img" src="{{ prod.imgproduct_set.first.img.url }}" alt="Зображення поста">
     </div>
     {% endif %}
-    <p id="product_txt">{{ prod.name }}</p>
-    <p id="product_txt">{{ prod.description|truncatewords:3 }}</p>
+    <div id="buf_txt">
+    <a id="product_txt" href="{% url 'product' id=prod.id %}">{{ prod.name }}</a>
     <p id="product_txt">Ціна {{ prod.price }} грн</p>
-    <a id="teg" href="{% url 'product' id=prod.id %}">Відкрити</a>
-
+    </div>
 
 </div>
 {% endfor %}
-
-
-<div class="post">
-    <img id="avat"
-         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ9U-3M3-sIWxet8KCrERzfSPzn-XF8WwOf8w&usqp=CAU">
-    <h2 id="user">SeDiMaT</h2>
-    <br>
-
-    <p id="teg">Нейронка</p>
-    <p id="teg">Замки</p>
-    <p id="teg">Зображення</p>
-    <img id="post_img"
-         src="https://img2.joyreactor.cc/pics/post/%D0%BA%D1%80%D0%B0%D1%81%D0%B8%D0%B2%D1%8B%D0%B5-%D0%BA%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D0%BA%D0%B8-art-castle-Oliver-Beck-8198605.jpeg">
-    <a id="teg" href="#">Коментар</a>
-    <p id="teg">20.11.23 17:10</p>
-    <br>
-
-
-</div>
 
 
 

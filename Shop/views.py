@@ -2,8 +2,8 @@ from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect, get_object_or_404
-from .forms import UserRegistrationForm, UserProfileForm
-from .models import UserProfile, Products, ImgProduct, Category
+from .forms import UserRegistrationForm, UserProfileForm, BasketForm
+from .models import UserProfile, Products, ImgProduct, Category, BufBasket
 
 
 # Create your views here.
@@ -29,6 +29,26 @@ def index(request):
 
 def product(request, id=None):
     product = get_object_or_404(Products, id=id)
+    if request.method == "POST":
+        form = BasketForm(request.POST)
+        # if not request.user:
+        #     return render(request, 'Shop/product.html', context={"text": "Авторизуйтесь"})
+
+        if form.is_valid() and request.user:
+            bask = form.save(commit=False)
+            bask.user = request.user
+            bask.prod = product
+            bask.save()
+
+            imgs = ImgProduct.objects.filter(product=product.id)
+            context = {
+                "imgs": imgs,
+                "product": product,
+                'add': "Додано до кошика"
+            }
+            return render(request, 'Shop/product.html', context=context)
+
+
     imgs = ImgProduct.objects.filter(product=product.id)
     context = {
         "imgs": imgs,
@@ -67,15 +87,34 @@ def user(request):
 
     if request.user.username:
         user = User.objects.get(username=request.user.username)
+        basket2 = BufBasket.objects.filter(user=user)
+        basket = []
+        sum = 0
+        for b in basket2:
+            product = Products.objects.get(id=b.prod.id)
+            all = b.quantity * product.price
+            sum += all
+            item = {
+                'id': b.id,
+                'user': b.user,
+                'product_name': product.name,
+                'quantity': b.quantity,
+                'price': product.price,
+                'all_price': all
+            }
+            basket.append(item)
+
         if UserInfo(user):
             info = UserInfo(user)
             form = UserRegistrationForm()
             context = {
                 'user': user,
                 'info': info,
-                'form': form
+                'form': form,
+                'basket': basket,
+                'sum': sum
             }
-            return render(request, 'Shop/user.html',context=context)
+            return render(request, 'Shop/user.html', context=context)
 
 
     return render(request, 'Shop/user.html')
@@ -84,3 +123,8 @@ def user(request):
 def logout_view(request):
     logout(request)
     return redirect('index')
+
+def basket_del(request, id=None):
+    buf_basket_instance = BufBasket.objects.get(id=id)
+    buf_basket_instance.delete()
+    return redirect('user')

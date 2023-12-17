@@ -6,7 +6,7 @@
 
 <img class="avatar" src="{{ info.avatar.url }}" width="100">
 <p class="form-label" >{{ user.username }}</p>
-<a href="{% url 'logout' %}" class="rega">Вийти</a>
+<a href="{% url 'logout' %}" id="del_bask">Вийти</a>
 <h2 class="form-label">{{ text }}</h2>
 
 {% else %}
@@ -54,5 +54,32 @@
 </form>
 
 {% endif %}
+
+{% endblock %}
+
+{% block content %}
+
+<p id="product_txt_big">Кошик</p>
+
+<table class="table_basket">
+        <tr id="tr2">
+            <td>Назва товару</td>
+            <td>Кількість</td>
+            <td>Ціна</td>
+            <td>Вартість</td>
+
+        </tr>
+        {% for b in basket %}
+            <tr id="tr1">
+                <td>{{ b.product_name }}</td>
+                <td>{{ b.quantity }}</td>
+                <td>{{ b.price }}</td>
+                <td>{{ b.all_price }}</td>
+                <td><a id="del_bask" href="{% url 'basket_del' id=b.id %}">Видалити</a></td>
+
+            </tr>
+        {% endfor %}
+</table>
+<h2 id="sum_left"> Закальна вартість: {{ sum }} Грн</h2>
 
 {% endblock %}
