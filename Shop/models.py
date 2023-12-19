@@ -68,6 +68,11 @@ class BufBasket(models.Model):
         verbose_name = "Корзина"
         verbose_name_plural = "Корзина"
 
+class ListOrders(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Покупець")
+    description = models.TextField(verbose_name="Замовлення")
+    status = models.PositiveIntegerField(default=1, verbose_name="Статус")
+
 
 
 # Create your models here.

@@ -17,3 +17,16 @@ class BasketForm(forms.ModelForm):
     class Meta:
         model = BufBasket
         exclude = ('user', 'prod',)
+
+class ImgProductForm(forms.ModelForm):
+    class Meta:
+        model = ImgProduct
+        exclude = ('product',)
+
+class ProductsForm(forms.ModelForm):
+    class Meta:
+        model = Products
+        exclude = ('published_date',)
+
+
+

@@ -3,7 +3,7 @@
 {% block content1 %}
 {% for cat in category %}
     <div class="category" style="background-image: url('{{ cat.img_cat.url }}');">
-        <a id="category" href="{% url 'category' name=cat.name %}">{{ cat.name }}</a>
+        <a id="category" href="{% url 'category' name=cat.name id=0 %}">{{ cat.name }}</a>
     </div>
 {% endfor %}
 
@@ -28,6 +28,27 @@
 
 </div>
 {% endfor %}
+
+
+{% endblock %}
+
+{% block content2 %}
+<table id="navi">
+        <tr>
+            <td><a href="{% url 'page' id=0 %}" id="button_left">1</a></td>
+            <td><a href="{% url 'page' id=1 %}" id="button_left">2</a></td>
+            <td><a href="{% url 'page' id=2 %}" id="button_left">3</a></td>
+            <td><a href="{% url 'page' id=3 %}" id="button_left">4</a></td>
+            <td><a href="{% url 'page' id=4 %}" id="button_left">5</a></td>
+            <td><a href="{% url 'page' id=5 %}" id="button_left">6</a></td>
+            <td><a href="{% url 'page' id=6 %}" id="button_left">7</a></td>
+            <td><a href="{% url 'page' id=7 %}" id="button_left">8</a></td>
+            <td><a href="{% url 'page' id=8 %}" id="button_left">9</a></td>
+            <td><a href="{% url 'page' id=long %}" id="button_left">{{long}}</a></td>
+            <td><a href="{% url 'page' id=i %}" id="button_right">Наступна {{i}} / {{long}}</a></td>
+
+        </tr>
+</table>
 
 
 

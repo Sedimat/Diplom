@@ -45,6 +45,7 @@
 
             </div>
 
+
             <div class="navigation">
 
                 {% block content1 %}
@@ -52,6 +53,14 @@
 
 
                 {% endblock %}
+
+            </div>
+
+            <div class="cont1">
+
+            {% block content2 %}
+
+            {% endblock %}
 
             </div>
         </div>
@@ -67,6 +76,19 @@
         </div>
 
     </div>
+
+<script>
+    function addInput() {
+    // Створення нового інпуту файлу
+    var newInput = document.createElement('input');
+    newInput.type = 'file';
+    newInput.name = 'img';
+    newInput.className = 'form-control1';
+
+    // Додавання нового інпуту до форми
+    document.getElementById('test').appendChild(newInput);
+    }
+</script>
 
 </body></html>
 

@@ -62,8 +62,14 @@ body {
     background-color: #283A4EDD;
     margin: 0px;
     width: 900px;
-    min-height: 1000px;
+    min-height: 1100px;
     float: left;
+
+}
+.cont1 {
+    clear: both;
+    background-color: grey;
+    width: 900px;
 
 }
 
@@ -171,7 +177,7 @@ br {
     float: left;
     border-radius: 5px;
     background-color: #071A29;
-    margin: 10px 0px 10px 10px;
+    margin: 10px 0px 0px 10px;
     width: 215px;
     height: 280px;
 
@@ -292,3 +298,75 @@ br {
 td{
     padding: 0px 0px 0px 10px;
 }
+#button_left{
+    font-family: sans-serif;
+    border-radius: 5px;
+    font-size: 20px;
+    color: azure;
+    background-color: green;
+    padding: 5px 20px 5px 20px;
+
+}
+
+
+#button_right{
+    float: right;
+    font-family: sans-serif;
+    border-radius: 5px;
+    font-size: 20px;
+    color: azure;
+    background-color: green;
+    padding: 5px 20px 5px 20px;
+
+}
+#navi{
+    width: 100%;
+    margin: 0px;
+}
+.form_product{
+    clear: both;
+    background-color: darkgrey;
+    width: 100%;
+
+}
+#knopka{
+    clear: both;
+    border-radius: 5px;
+    background-color: orange;
+    margin: 10px;
+    padding: 5px;
+}
+#category4{
+    clear: both;
+    margin: 10px;
+    font-size: 16px;
+    width: 200px;
+}
+.form-control1{
+    float: left;
+    font-size: 16px;
+    width: 280px;
+    margin: 0px 2px 2px 10px;
+}
+.text_area1{
+    border-radius: 5px;
+    font-family: sans-serif;
+    font-size: 16px;
+    margin: 10px;
+    width: 870px;
+    height: 100px;
+    max-width: 870px;
+    max-height: 300px;
+
+}
+
+.form-control0{
+    font-family: sans-serif;
+    font-size: 16px;
+    border-radius: 5px;
+    margin: 10px;
+    width: 870px;
+    height: 30px;
+}
+
+margin: top right bottom left;
