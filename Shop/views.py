@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
@@ -6,7 +8,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
 from .forms import UserRegistrationForm, UserProfileForm, BasketForm, ProductsForm, ImgProductForm
-from .models import UserProfile, Products, ImgProduct, Category, BufBasket
+from .models import UserProfile, Products, ImgProduct, Category, BufBasket, ListOrders
 
 
 # Create your views here.
@@ -69,10 +71,10 @@ def category(request, name=None, id=None):
     products = Products.objects.filter(category=cat.id).order_by("-published_date")  # сортує по даті додавання
     long = len(products)
     start = id
-    id += 1
+    id += 10
     if id > long:
         id = long
-        start = id - 1
+        start = id - (id % 10)
     product = products[start:id]
 
     category = Category.objects.all()
@@ -88,16 +90,6 @@ def category(request, name=None, id=None):
 def user(request):
     category = Category.objects.all()
     if request.method == "POST":
-        prod = ProductsForm(request.POST, request.FILES)
-        if prod.is_valid():
-            produc = prod.save(commit=False)
-            produc.published_date = timezone.now()
-            produc.save()
-            for img in request.FILES.getlist('img'):
-                imgpost = ImgProduct(product=produc, img=img)
-                imgpost.save()
-            return index(request)
-
         user_form = UserRegistrationForm(request.POST)
         profile_form = UserProfileForm(request.POST, request.FILES)
         if user_form.is_valid() and profile_form.is_valid():
@@ -112,6 +104,11 @@ def user(request):
 
     if request.user.username:
         user = User.objects.get(username=request.user.username)
+        orders = ListOrders.objects.filter(user=user).order_by("-date")
+        list_orders = []
+        for i in orders:
+            list_orders.append([i.user, json.loads(i.description), i.status, i.date, i.price])
+        # data = json.loads(i.description))
         basket2 = BufBasket.objects.filter(user=user)
         basket = []
         sum = 0
@@ -133,7 +130,8 @@ def user(request):
             info = UserInfo(user)
             form = UserRegistrationForm()
             context = {
-                'category':category,
+                'orders': list_orders,
+                'category': category,
                 'user': user,
                 'info': info,
                 'form': form,
@@ -160,10 +158,10 @@ def page(request, id=None):
     products = Products.objects.all().order_by("-published_date")  # сортує по даті додавання
     long = len(products)
     start = id
-    id += 1
+    id += 10
     if id > long:
         id = long
-        start = id - 1
+        start = id - (id % 10)
     product = products[start:id]
     img = ImgProduct.objects.all()
     context = {
@@ -174,3 +172,47 @@ def page(request, id=None):
         "product": product
     }
     return render(request, 'Shop/index.html', context=context)
+
+
+def order(request):
+    user = User.objects.get(username=request.user.username)
+    basket2 = BufBasket.objects.filter(user=user)
+    listorder = []
+    sum = 0
+    for b in basket2: # Добавляємо товари до замовлення
+        product = Products.objects.get(id=b.prod.id)
+        all = b.quantity * product.price
+        sum += all
+
+        listorder.append([product.name, b.quantity, float(product.price), float(all)])
+
+    descr = json.dumps(listorder)
+    order1 = ListOrders(user=user, description=descr, status=1, date=timezone.now(),price=sum)
+    order1.save()
+
+    for prod in basket2: # видаляємо записи з корзини
+        prod.delete()
+
+    # read = ListOrders.objects.get(user=user)
+    # data = json.loads(read.description)
+
+    return redirect('user')
+
+
+def creat(request):
+    category = Category.objects.all()
+    if request.method == "POST":
+        prod = ProductsForm(request.POST, request.FILES)
+        if prod.is_valid():
+            produc = prod.save(commit=False)
+            produc.published_date = timezone.now()
+            produc.save()
+            for img in request.FILES.getlist('img'):
+                imgpost = ImgProduct(product=produc, img=img)
+                imgpost.save()
+            return index(request)
+    else:
+        context = {
+            'category': category,
+        }
+        return render(request, 'Shop/creat.html', context=context)

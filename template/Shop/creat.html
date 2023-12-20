@@ -1,0 +1,48 @@
+{% extends "Shop/base.html" %}
+
+{% block content1 %}
+{% endblock %}
+
+{% block content %}
+
+{% if request.user.is_staff %}
+<div class="form_product">
+
+   <form enctype="multipart/form-data" action="{% url 'user' %}" method="POST">
+    {% csrf_token %}
+    <label for="name" class="form-label">Назва товару</label>
+    <input type="text" class="form-control0" name="name" id="name" placeholder="Назва товару">
+
+    <label for="description" class="form-label">Опис товару</label>
+    <textarea class="text_area1" name="description" id="description" placeholder="Опис товару"></textarea>
+
+    <label for="amount" class="form-label">Кількість</label>
+    <input type="number" class="form-control0" name="amount" id="amount" value="1">
+
+    <label for="price" class="form-label">Ціна</label>
+    <input type="text" class="form-control0" name="price" id="price" placeholder="Ведіть ціну" step="1">
+
+    <label for="category4" class="form-label">Категорія</label>
+    <br>
+    <select name="category" id="category4" multiple>
+            {% for cat in category %}
+            <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+    </select>
+    <br>
+
+    <label for="imgprod" class="form-label">Зображення</label>
+    <div id="test">
+    <input type="file" class="form-control1" name="img" id="imgprod">
+    </div>
+    <br>
+    <button type="button" onclick="addInput()" id="knopka" >Добавит поле</button>
+
+    <button type="submit" class="rega">Добавити Товар</button>
+</form>
+
+</div>
+
+{% endif %}
+{% endblock %}
+

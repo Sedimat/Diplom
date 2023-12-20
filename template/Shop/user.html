@@ -10,6 +10,7 @@
 
 {% if request.user.is_staff %}
     <p class="form-label" >Адмін</p>
+    <a href="{% url 'creat' %}" id="del_bask">Добавити товар</a>
 {% endif %}
 <br>
 <p class="form-label">Телефон: {{ info.phone }}</p>
@@ -86,46 +87,52 @@
         {% endfor %}
 </table>
 <h2 id="sum_left"> Закальна вартість: {{ sum }} Грн</h2>
+<br>
+<a id="order" href="{% url 'order' %}">Оформити замовлення</a>
+<hr>
+<p class="form-label" >Ваші замовлення:</p>
+{% for ord in orders %}
+<table class="table_basket">
+    <!-- Верхній рядок з заголовками (необов'язково) -->
+    <tr id="tr2">
+        <th>Товари</th>
+        <th width="100">Статус</th>
+    </tr>
+    <!-- Дані з вашого списку -->
+        <tr id="tr1">
+            <th>
+                <table class="table_basket">
+                <tr id="tr2">
+                    <th width="500">Товар</th>
+                    <th width="70">Кількість</th>
+                    <th>Ціна</th>
+                    <th>Вартість</th>
+                </tr>
+                {% for i in ord.1 %}
+                <tr id="tr1">
+                    <th>{{ i.0 }}</th>
+                    <th>{{ i.1 }}</th>
+                    <th>{{ i.2 }}</th>
+                    <th>{{ i.3 }}</th>
+                </tr>
+                {% endfor %}
+            </table>
+            </th>
+                {% if ord.2 == 1 %}
+                    <th style="background-color: #08bf39;">Новий</th>
+                {% elif ord.2 == 2 %}
+                    <th style="background-color: orange;">В роботі</th>
+                {% else %}
+                    {{ ord.2 }}
+                {% endif %}
+        </tr>
+</table>
+<h2 id="sum_left">Вартість замовлення: {{ ord.4 }} грн</h2>
+<br>
+<h3 id="sum_left">Дата оформлення: {{ ord.3 }} </h3>
+<hr>
 
+{% endfor %}
 
-{% if request.user.is_staff %}
-<div class="form_product">
-
-   <form enctype="multipart/form-data" action="{% url 'user' %}" method="POST">
-    {% csrf_token %}
-    <label for="name" class="form-label">Назва товару</label>
-    <input type="text" class="form-control0" name="name" id="name" placeholder="Назва товару">
-
-    <label for="description" class="form-label">Опис товару</label>
-    <textarea class="text_area1" name="description" id="description" placeholder="Опис товару"></textarea>
-
-    <label for="amount" class="form-label">Кількість</label>
-    <input type="number" class="form-control0" name="amount" id="amount" value="1">
-
-    <label for="price" class="form-label">Ціна</label>
-    <input type="text" class="form-control0" name="price" id="price" placeholder="Ведіть ціну" step="1">
-
-    <label for="category4" class="form-label">Категорія</label>
-    <br>
-    <select name="category" id="category4" multiple>
-            {% for cat in category %}
-            <option value="{{ cat.id }}">{{ cat.name }}</option>
-            {% endfor %}
-    </select>
-    <br>
-
-    <label for="imgprod" class="form-label">Зображення</label>
-    <div id="test">
-    <input type="file" class="form-control1" name="img" id="imgprod">
-    </div>
-    <br>
-    <button type="button" onclick="addInput()" id="knopka" >Добавит поле</button>
-
-    <button type="submit" class="rega">Добавити Товар</button>
-</form>
-
-</div>
-
-{% endif %}
 
 {% endblock %}
