@@ -5,16 +5,31 @@
 {% if user.is_authenticated %}
 
 <img class="avatar" src="{{ info.avatar.url }}" width="100">
-<p class="form-label" >{{ user.username }}</p>
+<p id="product_txt_big" >{{ user.username }}</p>
 <a href="{% url 'logout' %}" id="del_bask">Вийти</a>
-
-{% if request.user.is_staff %}
-    <p class="form-label" >Адмін</p>
-    <a href="{% url 'creat' %}" id="del_bask">Добавити товар</a>
-{% endif %}
 <br>
+{% if request.user.is_staff %}
+    <a href="{% url 'creat' %}" id="del_bask">Добавити товар</a>
+<br>
+<table class="table_basket">
+        <tr id="tr1">
+            <td><a href="{% url 'orders' %}" id="product_txt">Нові замовлення:</a></td>
+            <td style="background-color: #08bf39;">{{ lnew }}</td>
+        </tr>
+        <tr id="tr1">
+            <td>В роботі:</td>
+            <td style="background-color: orange;">{{ lwork }}</td>
+        </tr>
+        <tr id="tr1">
+            <td>Виконані:</td>
+            <td style="background-color: blue;">{{ lend }}</td>
+        </tr>
+</table>
+{% endif %}
 <p class="form-label">Телефон: {{ info.phone }}</p>
 <p class="form-label">Адреса: {{ info.address }}</p>
+
+
 
 {% else %}
 
@@ -98,19 +113,20 @@
         <th>Товари</th>
         <th width="100">Статус</th>
     </tr>
+
     <!-- Дані з вашого списку -->
         <tr id="tr1">
             <th>
                 <table class="table_basket">
                 <tr id="tr2">
-                    <th width="500">Товар</th>
+                    <th width="400">Товар</th>
                     <th width="70">Кількість</th>
                     <th>Ціна</th>
                     <th>Вартість</th>
                 </tr>
                 {% for i in ord.1 %}
                 <tr id="tr1">
-                    <th>{{ i.0 }}</th>
+                    <th><img class="prew" src="{{ i.5.img.url }}"><a id="product_txt" href="{% url 'product' id=i.6.id %}">{{  i.6 }}</a></th>
                     <th>{{ i.1 }}</th>
                     <th>{{ i.2 }}</th>
                     <th>{{ i.3 }}</th>
@@ -122,6 +138,8 @@
                     <th style="background-color: #08bf39;">Новий</th>
                 {% elif ord.2 == 2 %}
                     <th style="background-color: orange;">В роботі</th>
+                {% elif ord.2 == 3 %}
+                    <th style="background-color: blue;">Виконаний</th>
                 {% else %}
                     {{ ord.2 }}
                 {% endif %}

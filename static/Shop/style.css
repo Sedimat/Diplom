@@ -67,17 +67,17 @@ body {
 
 }
 .cont1 {
-    clear: both;
+    float: left;
     background-color: grey;
     width: 900px;
 
 }
 
 .navigation {
+    float: right;
     background-color: #4B708DDD;
     width: 300px;
     min-height: 1000px;
-    float: left;
 
 }
 
@@ -120,7 +120,7 @@ body {
 
 hr {
     clear: both;
-    margin: 0px 0px 60px 0px;
+    margin: 0px 0px 20px 0px;
 }
 
 #avat {
@@ -170,7 +170,13 @@ br {
     border-radius: 15px;
     margin: 10px;
     width: 100px;
+}
 
+.prew{
+    float: left;
+    border-radius: 5px;
+    margin: 0px 10px 0px 10px;
+    width: 50px;
 }
 
 .product{
@@ -270,6 +276,7 @@ br {
     font-family: sans-serif;
     font-size: 18px;
     color: azure;
+    margin: 10px 0px 0px 0px;
 }
 #sum_left{
     margin: 10px;
@@ -279,6 +286,7 @@ br {
     color: azure;
 }
 #del_bask{
+    margin: 10px;
     border-radius: 5px;
     background-color: orange;
     padding: 2px 10px 2px 10px;

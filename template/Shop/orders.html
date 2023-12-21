@@ -1,0 +1,55 @@
+{% extends "Shop/base.html" %}
+
+{% block content1 %}
+<table class="table_basket">
+        <tr id="tr1">
+            <td>Нові замовлення:</td>
+            <td style="background-color: #08bf39;">{{ lnew }}</td>
+        </tr>
+        <tr id="tr1">
+            <td>В роботі:</td>
+            <td style="background-color: orange;">{{ lwork }}</td>
+        </tr>
+        <tr id="tr1">
+            <td>Виконані:</td>
+            <td style="background-color: blue;">{{ lend }}</td>
+        </tr>
+</table>
+{% endblock %}
+
+user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Покупець")
+    description = models.TextField(verbose_name="Замовлення")
+    status = models.PositiveIntegerField(default=1, verbose_name="Статус")
+    date = models.DateTimeField(auto_created=True, verbose_name="Час")
+    price = models.DecimalField(max_digits=10, decimal_places=2,default=1, verbose_name="Ціна замовлення")
+
+{% block content %}
+{% for ord in list_orders %}
+<p>{{ ord }}</p>
+
+{% endfor %}
+
+<table class="table_basket">
+        <tr id="tr2">
+            <td>Користувач</td>
+            <td>Товари</td>
+            <td>Дата</td>
+            <td>Сума</td>
+            <td>Статус</td>
+
+        </tr>
+        {% for ord in new %}
+        <tr id="tr1">
+            <td>{{ ord.user }}</td>
+            <td>{{ ord.description }}</td>
+            <td>{{ ord.date }}</td>
+            <td>{{ ord.price }}</td>
+            <td>{{ ord.status }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+
+</table>
+{% endblock %}

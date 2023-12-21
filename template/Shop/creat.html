@@ -7,9 +7,9 @@
 
 {% if request.user.is_staff %}
 <div class="form_product">
-
-   <form enctype="multipart/form-data" action="{% url 'user' %}" method="POST">
+   <form enctype="multipart/form-data" action="{% url 'creat' %}" method="POST">
     {% csrf_token %}
+
     <label for="name" class="form-label">Назва товару</label>
     <input type="text" class="form-control0" name="name" id="name" placeholder="Назва товару">
 
@@ -32,11 +32,12 @@
     <br>
 
     <label for="imgprod" class="form-label">Зображення</label>
+    <button type="button" onclick="addInput()" id="knopka" >Добавит поле</button>
     <div id="test">
     <input type="file" class="form-control1" name="img" id="imgprod">
     </div>
     <br>
-    <button type="button" onclick="addInput()" id="knopka" >Добавит поле</button>
+
 
     <button type="submit" class="rega">Добавити Товар</button>
 </form>

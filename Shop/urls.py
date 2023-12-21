@@ -7,6 +7,7 @@ urlpatterns = [
     path('page/<int:id>', views.page, name='page'),
     path('user', views.user, name='user'),
     path('order', views.order, name='order'),
+    path('orders', views.orders, name='orders'),
     path('creat', views.creat, name='creat'),
     path("product/<int:id>", views.product, name="product"),
     path("basket_del/<int:id>", views.basket_del, name="basket_del"),

@@ -13,6 +13,13 @@ from .models import UserProfile, Products, ImgProduct, Category, BufBasket, List
 
 # Create your views here.
 
+def ListOrder():
+    new = ListOrders.objects.filter(status=1)
+    work = ListOrders.objects.filter(status=2)
+    end = ListOrders.objects.filter(status=3)
+    return {'new': new, 'work': work, 'end': end, 'lnew': len(new), 'lwork': len(work), 'lend': len(end)}
+
+
 def UserInfo(user):
     try:
         info = UserProfile.objects.get(id_user=user)
@@ -36,6 +43,7 @@ def index(request):
     }
     return render(request, 'Shop/index.html', context=context)
 
+
 def product(request, id=None):
     product = get_object_or_404(Products, id=id)
     if request.method == "POST":
@@ -57,13 +65,13 @@ def product(request, id=None):
             }
             return render(request, 'Shop/product.html', context=context)
 
-
     imgs = ImgProduct.objects.filter(product=product.id)
     context = {
         "imgs": imgs,
         "product": product
     }
     return render(request, 'Shop/product.html', context=context)
+
 
 def category(request, name=None, id=None):
     # is_admin = request.user.is_staff
@@ -87,6 +95,7 @@ def category(request, name=None, id=None):
     }
     return render(request, 'Shop/category.html', context=context)
 
+
 def user(request):
     category = Category.objects.all()
     if request.method == "POST":
@@ -107,7 +116,13 @@ def user(request):
         orders = ListOrders.objects.filter(user=user).order_by("-date")
         list_orders = []
         for i in orders:
-            list_orders.append([i.user, json.loads(i.description), i.status, i.date, i.price])
+            a = json.loads(i.description)
+            for it in a:
+                product = get_object_or_404(Products, id=it[4])
+                imgs = ImgProduct.objects.filter(product=product.id)
+                it.append(imgs[0])
+                it.append(product)
+            list_orders.append([i.user, a, i.status, i.date, i.price])
         # data = json.loads(i.description))
         basket2 = BufBasket.objects.filter(user=user)
         basket = []
@@ -138,8 +153,9 @@ def user(request):
                 'basket': basket,
                 'sum': sum
             }
-            return render(request, 'Shop/user.html', context=context)
+            context.update(ListOrder())
 
+            return render(request, 'Shop/user.html', context=context)
 
     return render(request, 'Shop/user.html')
 
@@ -148,20 +164,22 @@ def logout_view(request):
     logout(request)
     return redirect('index')
 
+
 def basket_del(request, id=None):
     buf_basket_instance = BufBasket.objects.get(id=id)
     buf_basket_instance.delete()
     return redirect('user')
+
 
 def page(request, id=None):
     category = Category.objects.all()
     products = Products.objects.all().order_by("-published_date")  # сортує по даті додавання
     long = len(products)
     start = id
-    id += 10
+    id += 12
     if id > long:
         id = long
-        start = id - (id % 10)
+        start = id - (id % 12)
     product = products[start:id]
     img = ImgProduct.objects.all()
     context = {
@@ -179,18 +197,19 @@ def order(request):
     basket2 = BufBasket.objects.filter(user=user)
     listorder = []
     sum = 0
-    for b in basket2: # Добавляємо товари до замовлення
+    for b in basket2:  # Добавляємо товари до замовлення
         product = Products.objects.get(id=b.prod.id)
+        print(product.id)
         all = b.quantity * product.price
         sum += all
 
-        listorder.append([product.name, b.quantity, float(product.price), float(all)])
+        listorder.append([product.name, b.quantity, float(product.price), float(all), product.id])
 
     descr = json.dumps(listorder)
-    order1 = ListOrders(user=user, description=descr, status=1, date=timezone.now(),price=sum)
+    order1 = ListOrders(user=user, description=descr, status=1, date=timezone.now(), price=sum)
     order1.save()
 
-    for prod in basket2: # видаляємо записи з корзини
+    for prod in basket2:  # видаляємо записи з корзини
         prod.delete()
 
     # read = ListOrders.objects.get(user=user)
@@ -202,6 +221,7 @@ def order(request):
 def creat(request):
     category = Category.objects.all()
     if request.method == "POST":
+        print("ЄЄЄЄ")
         prod = ProductsForm(request.POST, request.FILES)
         if prod.is_valid():
             produc = prod.save(commit=False)
@@ -216,3 +236,23 @@ def creat(request):
             'category': category,
         }
         return render(request, 'Shop/creat.html', context=context)
+
+
+def orders(request):
+    lnew = ListOrder()['lnew']
+    new = ListOrder()['new']
+    for i in new:
+        list_orders = []
+        a = json.loads(i.description)
+        for it in a:
+            product = get_object_or_404(Products, id=it[4])
+            imgs = ImgProduct.objects.filter(product=product.id)
+            it.append(imgs[0])
+            it.append(product)
+        list_orders.append([i.user, a, i.status, i.date, i.price])
+    context = {
+        'lnew': lnew,
+        'new': new,
+        'list_orders': list_orders,
+    }
+    return render(request, 'Shop/orders.html', context=context)
