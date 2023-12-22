@@ -12,6 +12,19 @@ from .models import UserProfile, Products, ImgProduct, Category, BufBasket, List
 
 
 # Create your views here.
+def UpdateOrder(orders):
+    list_orders = []
+    for i in orders:
+        a = json.loads(i.description)
+        for it in a:
+            product = get_object_or_404(Products, id=it[4])
+            imgs = ImgProduct.objects.filter(product=product.id)
+            user = User.objects.get(username=i.user)
+            user_profile = UserProfile.objects.get(id_user=user.id)
+            it.append(imgs[0])
+            it.append(product)
+        list_orders.append([i.user, a, i.status, i.date, i.price, user_profile, i.id])
+    return list_orders
 
 def ListOrder():
     new = ListOrders.objects.filter(status=1)
@@ -27,6 +40,24 @@ def UserInfo(user):
     except:
         return False
 
+def BasketDict(user):
+    basket2 = BufBasket.objects.filter(user=user)
+    basket = []
+    sum = 0
+    for b in basket2:
+        product = Products.objects.get(id=b.prod.id)
+        all = b.quantity * product.price
+        sum += all
+        item = {
+            'id': b.id,
+            'user': b.user,
+            'product_name': product.name,
+            'quantity': b.quantity,
+            'price': product.price,
+            'all_price': all
+        }
+        basket.append(item)
+    return (basket,sum,)
 
 def index(request):
     category = Category.objects.all()
@@ -34,6 +65,7 @@ def index(request):
     product = products
     long = len(products)
     img = ImgProduct.objects.all()
+
     context = {
         "category": category,
         "img": img,
@@ -41,40 +73,54 @@ def index(request):
         "i": 0,
         "long": long
     }
+    if request.user.username:
+        user = User.objects.get(username=request.user.username)
+        userinfo = UserInfo(user)
+        basket = BasketDict(user)
+        Uinfo = {
+            "basket": len(basket[0]),
+            "sum": basket[1],
+            "user": user,
+            "userinfo": userinfo
+            }
+        context.update(Uinfo)
     return render(request, 'Shop/index.html', context=context)
 
 
 def product(request, id=None):
     product = get_object_or_404(Products, id=id)
+    imgs = ImgProduct.objects.filter(product=product.id)
+    category = Category.objects.all()
     if request.method == "POST":
         form = BasketForm(request.POST)
-        # if not request.user:
-        #     return render(request, 'Shop/product.html', context={"text": "Авторизуйтесь"})
-
         if form.is_valid() and request.user:
             bask = form.save(commit=False)
             bask.user = request.user
             bask.prod = product
             bask.save()
+            return redirect('product', id=id)
 
-            imgs = ImgProduct.objects.filter(product=product.id)
-            context = {
-                "imgs": imgs,
-                "product": product,
-                'add': "Додано до кошика"
-            }
-            return render(request, 'Shop/product.html', context=context)
-
-    imgs = ImgProduct.objects.filter(product=product.id)
     context = {
+        "category": category,
         "imgs": imgs,
         "product": product
     }
+    if request.user.username:
+        user = User.objects.get(username=request.user.username)
+        userinfo = UserInfo(user)
+        basket = BasketDict(user)
+        Uinfo = {
+            "basket": len(basket[0]),
+            "sum": basket[1],
+            "user": user,
+            "userinfo": userinfo
+            }
+        context.update(Uinfo)
+
     return render(request, 'Shop/product.html', context=context)
 
 
 def category(request, name=None, id=None):
-    # is_admin = request.user.is_staff
     cat = get_object_or_404(Category, name=name)
     products = Products.objects.filter(category=cat.id).order_by("-published_date")  # сортує по даті додавання
     long = len(products)
@@ -93,6 +139,17 @@ def category(request, name=None, id=None):
         "category": category,
         "i": id
     }
+    if request.user.username:
+        user = User.objects.get(username=request.user.username)
+        userinfo = UserInfo(user)
+        basket = BasketDict(user)
+        Uinfo = {
+            "basket": len(basket[0]),
+            "sum": basket[1],
+            "user": user,
+            "userinfo": userinfo
+            }
+        context.update(Uinfo)
     return render(request, 'Shop/category.html', context=context)
 
 
@@ -114,32 +171,8 @@ def user(request):
     if request.user.username:
         user = User.objects.get(username=request.user.username)
         orders = ListOrders.objects.filter(user=user).order_by("-date")
-        list_orders = []
-        for i in orders:
-            a = json.loads(i.description)
-            for it in a:
-                product = get_object_or_404(Products, id=it[4])
-                imgs = ImgProduct.objects.filter(product=product.id)
-                it.append(imgs[0])
-                it.append(product)
-            list_orders.append([i.user, a, i.status, i.date, i.price])
-        # data = json.loads(i.description))
-        basket2 = BufBasket.objects.filter(user=user)
-        basket = []
-        sum = 0
-        for b in basket2:
-            product = Products.objects.get(id=b.prod.id)
-            all = b.quantity * product.price
-            sum += all
-            item = {
-                'id': b.id,
-                'user': b.user,
-                'product_name': product.name,
-                'quantity': b.quantity,
-                'price': product.price,
-                'all_price': all
-            }
-            basket.append(item)
+        list_orders = UpdateOrder(orders) # Перетворений список
+        basket_buf = BasketDict(user)
 
         if UserInfo(user):
             info = UserInfo(user)
@@ -150,8 +183,8 @@ def user(request):
                 'user': user,
                 'info': info,
                 'form': form,
-                'basket': basket,
-                'sum': sum
+                'basket': basket_buf[0],
+                'sum': basket_buf[1]
             }
             context.update(ListOrder())
 
@@ -189,6 +222,17 @@ def page(request, id=None):
         "img": img,
         "product": product
     }
+    if request.user.username:
+        user = User.objects.get(username=request.user.username)
+        userinfo = UserInfo(user)
+        basket = BasketDict(user)
+        Uinfo = {
+            "basket": len(basket[0]),
+            "sum": basket[1],
+            "user": user,
+            "userinfo": userinfo
+            }
+        context.update(Uinfo)
     return render(request, 'Shop/index.html', context=context)
 
 
@@ -238,21 +282,24 @@ def creat(request):
         return render(request, 'Shop/creat.html', context=context)
 
 
-def orders(request):
-    lnew = ListOrder()['lnew']
-    new = ListOrder()['new']
-    for i in new:
-        list_orders = []
-        a = json.loads(i.description)
-        for it in a:
-            product = get_object_or_404(Products, id=it[4])
-            imgs = ImgProduct.objects.filter(product=product.id)
-            it.append(imgs[0])
-            it.append(product)
-        list_orders.append([i.user, a, i.status, i.date, i.price])
+def orders(request, id=None):
+    orders = ListOrder()
+    lnew = orders['lnew']
+    lwork = orders['lwork']
+    lend = orders['lend']
+    buf_list = None
+    if id == 1:
+        buf_list = orders['new']
+    elif id == 2:
+        buf_list = orders['work']
+    elif id == 3:
+        buf_list = orders['end']
+    print(buf_list)
+    list_orders = list_orders = UpdateOrder(buf_list) # Перетворений список
     context = {
         'lnew': lnew,
-        'new': new,
+        'lwork': lwork,
+        'lend': lend,
         'list_orders': list_orders,
     }
     return render(request, 'Shop/orders.html', context=context)

@@ -5,23 +5,23 @@
 {% if user.is_authenticated %}
 
 <img class="avatar" src="{{ info.avatar.url }}" width="100">
-<p id="product_txt_big" >{{ user.username }}</p>
-<a href="{% url 'logout' %}" id="del_bask">Вийти</a>
+<p id="logo_text" >{{ user.username }}</p>
+<a href="{% url 'logout' %}" id="del_1bask">Вийти</a>
 <br>
 {% if request.user.is_staff %}
     <a href="{% url 'creat' %}" id="del_bask">Добавити товар</a>
 <br>
 <table class="table_basket">
         <tr id="tr1">
-            <td><a href="{% url 'orders' %}" id="product_txt">Нові замовлення:</a></td>
+            <td><a href="{% url 'orders' id=1 %}" id="product_txt">Нові замовлення:</a></td>
             <td style="background-color: #08bf39;">{{ lnew }}</td>
         </tr>
         <tr id="tr1">
-            <td>В роботі:</td>
+            <td><a href="{% url 'orders' id=2 %}" id="product_txt">В роботі:</a></td>
             <td style="background-color: orange;">{{ lwork }}</td>
         </tr>
         <tr id="tr1">
-            <td>Виконані:</td>
+            <td><a href="{% url 'orders' id=3 %}" id="product_txt">Виконані:</a></td>
             <td style="background-color: blue;">{{ lend }}</td>
         </tr>
 </table>
@@ -110,14 +110,25 @@
 <table class="table_basket">
     <!-- Верхній рядок з заголовками (необов'язково) -->
     <tr id="tr2">
-        <th>Товари</th>
-        <th width="100">Статус</th>
+        <th style="width:120px;">№ {{ ord.6 }}</th>
+        <th style="width:200px;">{{ ord.3 }}</th>
+
+        {% if ord.2 == 1 %}
+            <th style="background-color: #08bf39; width:120px;">Новий</th>
+        {% elif ord.2 == 2 %}
+            <th style="background-color: orange; width:120px;">В роботі</th>
+        {% elif ord.2 == 3 %}
+            <th style="background-color: blue; width:120px;">Виконаний</th>
+        {% else %}
+            {{ ord.2 }}
+        {% endif %}
     </tr>
 
-    <!-- Дані з вашого списку -->
-        <tr id="tr1">
-            <th>
-                <table class="table_basket">
+</table>
+<details>
+  <summary id="del_bask" style="background-color: #578cb5;">Клікніть, щоб побачити деталі</summary>
+
+  <table class="table_basket">
                 <tr id="tr2">
                     <th width="400">Товар</th>
                     <th width="70">Кількість</th>
@@ -132,24 +143,28 @@
                     <th>{{ i.3 }}</th>
                 </tr>
                 {% endfor %}
-            </table>
-            </th>
-                {% if ord.2 == 1 %}
-                    <th style="background-color: #08bf39;">Новий</th>
-                {% elif ord.2 == 2 %}
-                    <th style="background-color: orange;">В роботі</th>
-                {% elif ord.2 == 3 %}
-                    <th style="background-color: blue;">Виконаний</th>
-                {% else %}
-                    {{ ord.2 }}
-                {% endif %}
-        </tr>
-</table>
-<h2 id="sum_left">Вартість замовлення: {{ ord.4 }} грн</h2>
-<br>
-<h3 id="sum_left">Дата оформлення: {{ ord.3 }} </h3>
-<hr>
+  </table>
 
+    <table class="table_basket">
+        <tr id="tr2">
+            <th>Id замовлення</th>
+            <th>{{ ord.6 }}</th>
+        </tr>
+        <tr id="tr1">
+            <th>Ціна замовлення:</th>
+            <th>{{ ord.4 }} грн</th>
+        </tr>
+        <tr id="tr2">
+            <th>Телефон покупця:</th>
+            <th>{{ ord.5.phone }}</th>
+        </tr>
+        <tr id="tr1">
+            <th>Адрес покупця:</th>
+            <th>{{ ord.5.address }}</th>
+        </tr>
+    </table>
+</details>
+<hr>
 {% endfor %}
 
 

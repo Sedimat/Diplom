@@ -38,8 +38,8 @@ class ImgProduct(models.Model):
         return f'Зображення товарів'
 
     class Meta:
-        verbose_name = "Зображення"
-        verbose_name_plural = "Зображення"
+        verbose_name = "Зображення товарів"
+        verbose_name_plural = "Зображення товарів"
 
 
 class UserProfile(models.Model):

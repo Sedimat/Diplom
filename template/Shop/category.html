@@ -1,9 +1,39 @@
 {% extends "Shop/base.html" %}
 
 {% block content1 %}
+{% if user.is_authenticated %}
+
+<img class="avatar" src="{{ userinfo.avatar.url }}" width="100">
+<a id="logo_text" href="{% url 'user' %}">{{ user.username }}</a>
+<a href="{% url 'logout' %}" id="del_1bask">Вийти</a>
+<a id="logo_text1"  href="{% url 'user' %}">Кошик</a>
+<p id="logo_text1" >Товарів: {{ basket }} штук</p>
+<p id="logo_text1" >Сума {{ sum }} грн </p>
+
+<br>
+{% else %}
+
+<form class="navbar-form navbar-right" method="POST" role="form" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    <input type="text" class="form-control" name="username" id="username0" placeholder="Ваш нікнейм">
+
+    <input type="password" class="form-control" name="password" id="password0" placeholder="Пароль">
+
+    <button type="submit" class="rega">Війти</button>
+</form>
+
+{% endif %}
+
+{% if request.user.is_staff %}
+
+{% endif %}
+
+
+
 {% for cat in category %}
     <div class="category" style="background-image: url('{{ cat.img_cat.url }}');">
-        <a id="category" href="{% url 'category' name=cat.name id=0%}">{{ cat.name }}</a>
+        <a id="category" href="{% url 'category' name=cat.name id=0 %}">{{ cat.name }}</a>
     </div>
 {% endfor %}
 
