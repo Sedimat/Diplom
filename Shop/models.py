@@ -44,7 +44,7 @@ class ImgProduct(models.Model):
 
 class UserProfile(models.Model):
     id_user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Користувач")
-    avatar = models.ImageField(upload_to='avatar', default='avatar.jpg')
+    avatar = models.ImageField(upload_to='avatar', default='avatar/avatar_crj2ayQ.jpg')
     phone = models.CharField(max_length=13, verbose_name="Телефон")
     address = models.TextField(verbose_name="Адреса")
 
@@ -52,14 +52,13 @@ class UserProfile(models.Model):
         return f'Додаткова інформація'
 
     class Meta:
-        verbose_name = "Користувач"
-        verbose_name_plural = "Користувачі"
+        verbose_name = "Користувач додаток"
+        verbose_name_plural = "Користувачі додаток"
 
 class BufBasket(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Покупець")
     prod = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name="Товари")
     quantity = models.PositiveIntegerField(default=1, verbose_name="Кількість")
-
 
     def __str__(self):
         return f"{self.user} - {self.prod} - {self.quantity}"
@@ -81,6 +80,19 @@ class ListOrders(models.Model):
     class Meta:
         verbose_name = "Замовлення"
         verbose_name_plural = "Замовлення"
+
+class Coments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="Покупець")
+    prod = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name="Товари")
+    description = models.TextField(verbose_name="Опис")
+    published_date = models.DateTimeField(auto_created=True, verbose_name="Час")
+
+    def __str__(self):
+        return f"{self.user}"
+
+    class Meta:
+        verbose_name = "Коментарі"
+        verbose_name_plural = "Коментарі"
 
 
 

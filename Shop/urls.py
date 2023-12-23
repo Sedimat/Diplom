@@ -10,6 +10,7 @@ urlpatterns = [
     path('orders/<int:id>', views.orders, name='orders'),
     path('creat', views.creat, name='creat'),
     path("product/<int:id>", views.product, name="product"),
+    path("status/<int:id>/<int:stat>", views.status, name="status"),
     path("basket_del/<int:id>", views.basket_del, name="basket_del"),
     path("category/<str:name>/<int:id>", views.category, name="category"),
     path("login", LoginView.as_view(), name='login'),

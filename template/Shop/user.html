@@ -101,10 +101,18 @@
             </tr>
         {% endfor %}
 </table>
+
+{% if basket %}
 <h2 id="sum_left"> Закальна вартість: {{ sum }} Грн</h2>
 <br>
 <a id="order" href="{% url 'order' %}">Оформити замовлення</a>
+{% else %}
+<h2 id="sum_left">Ваш кошик порожній.</h2>
+{% endif %}
+
 <hr>
+
+
 <p class="form-label" >Ваші замовлення:</p>
 {% for ord in orders %}
 <table class="table_basket">

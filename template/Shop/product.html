@@ -1,8 +1,8 @@
 {% extends "Shop/base.html" %}
 
 {% block content1 %}
-{% if user.is_authenticated %}
 
+{% if user.is_authenticated %}
 <img class="avatar" src="{{ userinfo.avatar.url }}" width="100">
 <a id="logo_text" href="{% url 'user' %}">{{ user.username }}</a>
 <a href="{% url 'logout' %}" id="del_1bask">Вийти</a>
@@ -48,7 +48,7 @@
 
 <div class="product_form">
     <p id="product_txt_big">{{ product.name }}</p>
-    <p id="product_txt_big" style="float: right;" >Ціна: {{ product.price }} грн</p>
+    <p id="product_txt_big" >Ціна: {{ product.price }} грн</p>
     {% if user.is_authenticated %}
         <form action="#" method="post">
             {% csrf_token %}
@@ -60,11 +60,7 @@
 
     {% endif %}
 
-
-
-
     <p id="product_txt_big">{{ add }}</p>
-
 
 </div>
 
@@ -78,5 +74,41 @@
     <p id="product_txt_big">{{ product.name }}</p>
     <p id="product_txt_big2">{{ product.description }}</p>
 </div>
+
+
+
+<p id="logo_text">Відгуки:</p>
+
+{% if user.is_authenticated %}
+<form class="navbar-form navbar-right" method="POST" role="form" action="{% url 'product' id=product.id %}">
+    {% csrf_token %}
+    <textarea class="text_area2" name="description" placeholder="Добавити коментар"></textarea>
+    <button type="submit" id="del_2bask">Добавити відгук</button>
+</form>
+{% else %}
+<br>
+<p id="logo_text">Авторизуйтесь щоб добавити відгук:</p>
+<br>
+{% endif %}
+
+
+
+
+    {% for com in coments %}
+    <table class="table_coments">
+        <tr>
+            <td width="80">{{ com.0 }}</td>
+            <td >{{ com.3 }}</td>
+        </tr>
+        <tr id="tr2">
+            <td style="vertical-align: top;">
+                <img src="{{ com.4.url }}" width="80">
+            </td>
+            <td id="coments_txt">{{ com.2 }}</td>
+        </tr>
+    </table>
+    {% endfor %}
+
+
 
 {% endblock %}

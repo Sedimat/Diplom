@@ -1,14 +1,14 @@
 import json
 
-from django.contrib.auth import logout
+from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .forms import UserRegistrationForm, UserProfileForm, BasketForm, ProductsForm, ImgProductForm
-from .models import UserProfile, Products, ImgProduct, Category, BufBasket, ListOrders
+from .forms import UserRegistrationForm, UserProfileForm, BasketForm, ProductsForm, ImgProductForm, ComentsForm
+from .models import UserProfile, Products, ImgProduct, Category, BufBasket, ListOrders, Coments
 
 
 # Create your views here.
@@ -27,9 +27,9 @@ def UpdateOrder(orders):
     return list_orders
 
 def ListOrder():
-    new = ListOrders.objects.filter(status=1)
-    work = ListOrders.objects.filter(status=2)
-    end = ListOrders.objects.filter(status=3)
+    new = ListOrders.objects.filter(status=1).order_by("-date")  # сортує по даті додавання
+    work = ListOrders.objects.filter(status=2).order_by("-date")  # сортує по даті додавання
+    end = ListOrders.objects.filter(status=3).order_by("-date")  # сортує по даті додавання
     return {'new': new, 'work': work, 'end': end, 'lnew': len(new), 'lwork': len(work), 'lend': len(end)}
 
 
@@ -60,6 +60,9 @@ def BasketDict(user):
     return (basket,sum,)
 
 def index(request):
+    client_ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', None))
+    user_agent = request.META.get('HTTP_USER_AGENT', '')
+    print(client_ip)
     category = Category.objects.all()
     products = Products.objects.all().order_by("-published_date")  # сортує по даті додавання
     product = products
@@ -89,8 +92,25 @@ def index(request):
 
 def product(request, id=None):
     product = get_object_or_404(Products, id=id)
+    coments = Coments.objects.filter(prod=product.id).order_by("-published_date")
+    coms = []
+    for i in coments:
+        user_inf = UserProfile.objects.get(id_user=i.user)
+        bufcoms = [i.user, i.prod, i.description, i.published_date, user_inf.avatar]
+        coms.append(bufcoms)
+
     imgs = ImgProduct.objects.filter(product=product.id)
     category = Category.objects.all()
+    if request.method == "POST":
+        formC = ComentsForm(request.POST)
+        if formC.is_valid():
+            coment = formC.save(commit=False)
+            coment.user = request.user
+            coment.prod = product
+            coment.published_date = timezone.now()
+            coment.save()
+            return redirect('product', id=id)
+
     if request.method == "POST":
         form = BasketForm(request.POST)
         if form.is_valid() and request.user:
@@ -101,6 +121,7 @@ def product(request, id=None):
             return redirect('product', id=id)
 
     context = {
+        "coments": coms,
         "category": category,
         "imgs": imgs,
         "product": product
@@ -116,7 +137,6 @@ def product(request, id=None):
             "userinfo": userinfo
             }
         context.update(Uinfo)
-
     return render(request, 'Shop/product.html', context=context)
 
 
@@ -161,7 +181,7 @@ def user(request):
         if user_form.is_valid() and profile_form.is_valid():
             # Збереження користувача
             user = user_form.save()
-
+            login(request, user)
             # Збереження профілю
             profile = profile_form.save(commit=False)
             profile.id_user = user
@@ -174,21 +194,20 @@ def user(request):
         list_orders = UpdateOrder(orders) # Перетворений список
         basket_buf = BasketDict(user)
 
-        if UserInfo(user):
-            info = UserInfo(user)
-            form = UserRegistrationForm()
-            context = {
-                'orders': list_orders,
-                'category': category,
-                'user': user,
-                'info': info,
-                'form': form,
-                'basket': basket_buf[0],
-                'sum': basket_buf[1]
-            }
-            context.update(ListOrder())
+        info = UserInfo(user)
+        form = UserRegistrationForm()
+        context = {
+            'orders': list_orders,
+            'category': category,
+            'user': user,
+            'info': info,
+            'form': form,
+            'basket': basket_buf[0],
+            'sum': basket_buf[1]
+        }
+        context.update(ListOrder())
 
-            return render(request, 'Shop/user.html', context=context)
+        return render(request, 'Shop/user.html', context=context)
 
     return render(request, 'Shop/user.html')
 
@@ -239,27 +258,27 @@ def page(request, id=None):
 def order(request):
     user = User.objects.get(username=request.user.username)
     basket2 = BufBasket.objects.filter(user=user)
-    listorder = []
-    sum = 0
-    for b in basket2:  # Добавляємо товари до замовлення
-        product = Products.objects.get(id=b.prod.id)
-        print(product.id)
-        all = b.quantity * product.price
-        sum += all
+    if len(basket2) > 0:
+        listorder = []
+        sum = 0
+        for b in basket2:  # Добавляємо товари до замовлення
+            product = Products.objects.get(id=b.prod.id)
+            print(product.id)
+            all = b.quantity * product.price
+            sum += all
 
-        listorder.append([product.name, b.quantity, float(product.price), float(all), product.id])
+            listorder.append([product.name, b.quantity, float(product.price), float(all), product.id])
 
-    descr = json.dumps(listorder)
-    order1 = ListOrders(user=user, description=descr, status=1, date=timezone.now(), price=sum)
-    order1.save()
+        descr = json.dumps(listorder)
+        order1 = ListOrders(user=user, description=descr, status=1, date=timezone.now(), price=sum)
+        order1.save()
 
-    for prod in basket2:  # видаляємо записи з корзини
-        prod.delete()
+        for prod in basket2:  # видаляємо записи з корзини
+            prod.delete()
 
-    # read = ListOrders.objects.get(user=user)
-    # data = json.loads(read.description)
-
-    return redirect('user')
+        return redirect('user')
+    else:
+        return redirect('user')
 
 
 def creat(request):
@@ -294,7 +313,6 @@ def orders(request, id=None):
         buf_list = orders['work']
     elif id == 3:
         buf_list = orders['end']
-    print(buf_list)
     list_orders = list_orders = UpdateOrder(buf_list) # Перетворений список
     context = {
         'lnew': lnew,
@@ -303,3 +321,9 @@ def orders(request, id=None):
         'list_orders': list_orders,
     }
     return render(request, 'Shop/orders.html', context=context)
+
+def status(request, id=None, stat=None):
+    order = ListOrders.objects.get(id=id)
+    order.status = stat
+    order.save()
+    return redirect('orders', id=stat)

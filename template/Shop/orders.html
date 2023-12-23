@@ -25,9 +25,11 @@
     <tr id="tr2">
         <th>№ {{ ord.6 }}</th>
         <th>{{ ord.3 }}</th>
-        <th><a href="{% url 'orders' id=1 %}" id="del_bask" style="background-color: #08bf39; width:100px;">Новий</a></th>
-        <th><a href="{% url 'orders' id=2 %}" id="del_bask" style="background-color: orange; width:100px;">В роботі</a></th>
-        <th><a href="{% url 'orders' id=3 %}" id="del_bask" style="background-color: blue; width:100px;">Виконаний</a></th>
+
+        <th width="80"><a href="{% url 'status' id=ord.6 stat=1 %}" id="del_bask1">Новий</a></th>
+        <th width="150"><a href="{% url 'status' id=ord.6 stat=2 %}" id="del_bask1">В роботі</a></th>
+        <th width="80"><a href="{% url 'status' id=ord.6 stat=3 %}" id="del_bask1">Виконаний</a></th>
+
         {% if ord.2 == 1 %}
             <th style="background-color: #08bf39; width:120px;">Новий</th>
         {% elif ord.2 == 2 %}
@@ -46,9 +48,9 @@
   <table class="table_basket">
                 <tr id="tr2">
                     <th width="400">Товар</th>
-                    <th width="70">Кількість</th>
-                    <th>Ціна</th>
-                    <th>Вартість</th>
+                    <th width="50">Кількість</th>
+                    <th width="70">Ціна</th>
+                    <th width="70">Вартість</th>
                 </tr>
                 {% for i in ord.1 %}
                 <tr id="tr1">
