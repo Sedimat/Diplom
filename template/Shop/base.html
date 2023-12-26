@@ -73,6 +73,15 @@
     </div>
 
 <script>
+
+    function setCookie() {
+        // Отримання значення із поля вводу
+        var inputValue = document.getElementById("username0").value;
+
+        // Запис куки на стороні клієнта
+        document.cookie = "my_cookie=" + inputValue + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+    }
+
     function addInput() {
     // Створення нового інпуту файлу
     var newInput = document.createElement('input');

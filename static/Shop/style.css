@@ -286,6 +286,17 @@ br {
     color: azure;
     margin: 10px 0px 0px 0px;
 }
+.table_basket1{
+    border: none;
+    background-color: #434647;
+    width: 290px;
+    font-family: sans-serif;
+    font-size: 16px;
+    color: white;
+    padding: 10px 0px 10px 10px;
+    margin: 10px 0px 0px 0px;
+}
+
 .table_coments{
     background-color: #172835;
     width: 100%;
@@ -322,6 +333,17 @@ br {
     color: azure;
 }
 
+#del_3bask{
+    float: left;
+    margin: 12px 10px 10px 10px;
+    border-radius: 5px;
+    background-color: orange;
+    padding: 2px 5px 2px 5px;
+    font-family: sans-serif;
+    font-size: 18px;
+    color: azure;
+}
+
 
 #logo_text{
     float: left;
@@ -330,6 +352,16 @@ br {
     font-size: 22px;
     color: azure;
 }
+
+#file{
+    max-width: 120px;
+    float: left;
+    margin: 0px 10px 0px 10px;
+    font-family: sans-serif;
+    font-size: 14px;
+    color: azure;
+}
+
 
 #logo_text1{
     float: left;

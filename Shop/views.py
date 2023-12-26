@@ -4,6 +4,7 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
@@ -12,6 +13,29 @@ from .models import UserProfile, Products, ImgProduct, Category, BufBasket, List
 
 
 # Create your views here.
+
+def NoUserOrder(request):
+    sess = request.session.get('sess')
+    if sess == None:
+        return {}
+    len_order = []
+    sum2 = 0
+    prods = []
+    lenProd = 0
+    count = 0
+    for i in sess:
+        price = 0
+        product = Products.objects.get(id=i[1])
+        imgs = ImgProduct.objects.filter(product=product.id)
+        lenProd += i[0]
+        price = product.price * i[0]
+        sum2 += price
+        prods.append([product.name, imgs[0],product.price, i[0], price, count])
+        count += 1
+
+    len_order = [prods, lenProd, sum2]
+    return {'no_user': len_order}
+
 def UpdateOrder(orders):
     list_orders = []
     for i in orders:
@@ -60,15 +84,15 @@ def BasketDict(user):
     return (basket,sum,)
 
 def index(request):
+
     client_ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', None))
-    user_agent = request.META.get('HTTP_USER_AGENT', '')
+    user_agent = request.META.get('HTTP_USER_AGENT', '') # додаткова інфа
     print(client_ip)
     category = Category.objects.all()
     products = Products.objects.all().order_by("-published_date")  # сортує по даті додавання
     product = products
     long = len(products)
     img = ImgProduct.objects.all()
-
     context = {
         "category": category,
         "img": img,
@@ -87,6 +111,9 @@ def index(request):
             "userinfo": userinfo
             }
         context.update(Uinfo)
+    else:
+        context.update(NoUserOrder(request))
+
     return render(request, 'Shop/index.html', context=context)
 
 
@@ -177,16 +204,16 @@ def user(request):
     category = Category.objects.all()
     if request.method == "POST":
         user_form = UserRegistrationForm(request.POST)
-        profile_form = UserProfileForm(request.POST, request.FILES)
-        if user_form.is_valid() and profile_form.is_valid():
-            # Збереження користувача
+        if user_form.is_valid():
             user = user_form.save()
             login(request, user)
-            # Збереження профілю
-            profile = profile_form.save(commit=False)
-            profile.id_user = user
+            profile = UserProfile(id_user=user, avatar='avatar/avatar_crj2ayQ.jpg', phone=' ', address=' ')
             profile.save()
             return render(request, 'Shop/user.html', context={"a": "Ви успішно зареєструвались"})
+        else:
+            # Якщо форма не валідна, отримайте доступ до помилок
+            errors = user_form.errors
+            return render(request, 'Shop/user.html', context={"a": errors})
 
     if request.user.username:
         user = User.objects.get(username=request.user.username)
@@ -284,7 +311,6 @@ def order(request):
 def creat(request):
     category = Category.objects.all()
     if request.method == "POST":
-        print("ЄЄЄЄ")
         prod = ProductsForm(request.POST, request.FILES)
         if prod.is_valid():
             produc = prod.save(commit=False)
@@ -327,3 +353,62 @@ def status(request, id=None, stat=None):
     order.status = stat
     order.save()
     return redirect('orders', id=stat)
+
+
+def edit_profile(request, id=None, type=None):
+    if type == 1:
+        if request.method == "POST":
+            if 'avatar' in request.FILES:
+                avatar_file = request.FILES['avatar']
+                user_prof = UserProfile.objects.get(id_user=id)
+                user_prof.avatar = avatar_file
+                user_prof.save()
+    if type == 2:
+        if request.method == "POST":
+            phone = request.POST.get('phone')
+            address = request.POST.get('address')
+            if phone not in [None, ''] and address not in [None, '']:
+                user_prof = UserProfile.objects.get(id_user=id)
+                user_prof.phone = phone
+                user_prof.address = address
+                user_prof.save()
+    return redirect('user')
+
+
+
+def sessio(request, id=None):
+    if request.method == "POST":
+        quantity = int(request.POST.get('quantity'))
+        #request.session.flush() # видаляєму все
+        # del request.session['sess'] # видаляє тільки цю сесію
+        buf = request.session.get('sess')
+        if buf == None:
+            buf = []
+        if any(x[1] == id for x in buf):
+            for i in buf:
+                if i[1] == id:
+                    i[0] += quantity
+            request.session['sess'] = buf
+        else:
+            buf.append([quantity,id])
+            request.session['sess'] = buf
+        print(request.session.get('sess'))
+
+
+    return redirect('product', id=id)
+
+
+def basket(request):
+    context = {}
+    if request.user.username:
+        return redirect('user')
+    else:
+        context.update(NoUserOrder(request))
+
+    return render(request, 'Shop/basket.html', context=context)
+
+
+def no_user_basket_del(request, id=None):
+    sess = request.session.get('sess')
+    sess.pop(id)
+    return redirect('basket')

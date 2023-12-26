@@ -7,7 +7,56 @@
 <img class="avatar" src="{{ info.avatar.url }}" width="100">
 <p id="logo_text" >{{ user.username }}</p>
 <a href="{% url 'logout' %}" id="del_1bask">Вийти</a>
+<form enctype="multipart/form-data" action="{% url 'edit_profile' id=user.id type=1 %}" method="POST">
+    {% csrf_token %}
+    <input type="file" id="file" name="avatar">
+    <button type="submit" id="del_1bask">змінити аватарку</button>
+</form>
 <br>
+
+
+<p id="logo_text" >Ваша інформація:</p>
+<form enctype="multipart/form-data" action="{% url 'edit_profile' id=user.id type=2 %}" method="POST">
+    {% csrf_token %}
+    <input type="text" class="table_basket1" name="phone" id="phone0" value="{{ info.phone }}">
+
+    <input type="text" class="table_basket1" name="address" id="address0" value="{{ info.address }}">
+    <button type="submit" id="del_1bask" >Змінити адрес та телефон</button>
+</form>
+
+{% else %}
+
+<p id="logo_text" >Авторизація</p>
+<form class="navbar-form navbar-right" method="POST" role="form" action="{% url 'login' %}">
+    {% csrf_token %}
+
+    <input type="text" class="table_basket1" name="username" id="username0" placeholder="Ваш нікнейм">
+    <input type="password" class="table_basket1" name="password" id="password0" placeholder="Пароль">
+
+    <button type="submit" id="del_1bask">Війти</button>
+</form>
+
+
+<h2 id="logo_text">{{ a }}</h2>
+
+<br>
+<p id="logo_text" >Реєстрація</p>
+
+<form enctype="multipart/form-data" action="{% url 'user' %}" method="POST">
+    {% csrf_token %}
+
+    <input type="text" class="table_basket1" name="username" id="username" placeholder="Ваш нікнейм">
+    <input type="email" class="table_basket1" name="email" id="email" placeholder="Електрона пошта">
+    <input type="password" class="table_basket1" name="password1" id="password1" placeholder="Пароль">
+    <input type="password" class="table_basket1" name="password2" id="password2" placeholder="Підтвердження">
+
+    <button type="submit" id="del_1bask">Зареєструватись</button>
+</form>
+
+{% endif %}
+
+<hr>
+
 {% if request.user.is_staff %}
     <a href="{% url 'creat' %}" id="del_bask">Добавити товар</a>
 <br>
@@ -25,55 +74,6 @@
             <td style="background-color: blue;">{{ lend }}</td>
         </tr>
 </table>
-{% endif %}
-<p class="form-label">Телефон: {{ info.phone }}</p>
-<p class="form-label">Адреса: {{ info.address }}</p>
-
-
-
-{% else %}
-
-<form class="navbar-form navbar-right" method="POST" role="form" action="{% url 'login' %}">
-    {% csrf_token %}
-
-    <label for="username0" class="form-label">Ваш нікнейм</label>
-    <input type="text" class="form-control" name="username" id="username0" placeholder="Ваш нікнейм">
-
-    <label for="password0" class="form-label">Пароль</label>
-    <input type="password" class="form-control" name="password" id="password0" placeholder="Пароль">
-
-    <button type="submit" class="rega">Війти</button>
-</form>
-
-
-<h2>{{ a }}</h2>
-
-<form enctype="multipart/form-data" action="{% url 'user' %}" method="POST">
-    {% csrf_token %}
-    <label for="username" class="form-label">Ваш нікнейм</label>
-    <input type="text" class="form-control" name="username" id="username" placeholder="Ваш нікнейм">
-
-    <label for="email" class="form-label">Емейл</label>
-    <input type="email" class="form-control" name="email" id="email" placeholder="Електрона пошта">
-
-    <label for="password1" class="form-label">Пароль</label>
-    <input type="password" class="form-control" name="password1" id="password1" placeholder="Пароль">
-
-    <label for="password2" class="form-label">Підтвердження</label>
-    <input type="password" class="form-control" name="password2" id="password2" placeholder="Підтвердження">
-
-    <label for="avatar0" class="form-label">Аватарка</label>
-    <input type="file" class="form-control" name="avatar" id="avatar0" placeholder="Аватарка">
-
-    <label for="phone0" class="form-label">Телефон</label>
-    <input type="text" class="form-control" name="phone" id="phone0" placeholder="Телефон">
-
-    <label for="address0" class="form-label">Адреса</label>
-    <input type="text" class="form-control" name="address" id="address0" placeholder="Адреса">
-
-    <button type="submit" class="rega">Зареєструватись</button>
-</form>
-
 {% endif %}
 
 {% endblock %}

@@ -1,0 +1,41 @@
+{% extends "Shop/base.html" %}
+
+{% block content %}
+
+<p id="product_txt_big">Кошик</p>
+
+<table class="table_basket">
+        <tr id="tr2">
+            <td>Картинка</td>
+            <td>Назва товару</td>
+            <td  width="50">Кількість</td>
+            <td>Ціна</td>
+            <td>Вартість</td>
+
+        </tr>
+        {% for b in no_user.0 %}
+            <tr id="tr1">
+                <td><img class="prew" src="{{ b.1.img.url }}"></td>
+                <td>{{ b.0 }}</td>
+                <td>{{ b.3 }}</td>
+                <td>{{ b.2 }}</td>
+                <td>{{ b.4 }}</td>
+                <td><a id="del_bask" href="{% url 'no_user_basket_del' id=b.5 %}">del</a></td>
+
+            </tr>
+        {% endfor %}
+</table>
+
+{% if no_user %}
+<h2 id="sum_left"> Закальна вартість: {{ no_user.2 }} Грн</h2>
+<br>
+<h2 id="sum_left"> Кількість: {{ no_user.1 }} штук</h2>
+<br>
+<a id="order" href="{% url 'order' %}">Оформити замовлення</a>
+{% else %}
+<h2 id="sum_left">Ваш кошик порожній.</h2>
+{% endif %}
+
+<hr>
+
+{% endblock %}

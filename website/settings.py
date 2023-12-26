@@ -50,6 +50,13 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+
+# Термін дії сесії в секундах (наприклад, 30 днів)
+SESSION_COOKIE_AGE = 30 * 24 * 60 * 60
+# Позначте, чи треба оновлювати термін дії сесії кожен раз після отримання запиту
+SESSION_SAVE_EVERY_REQUEST = True
+
 ROOT_URLCONF = 'website.urls'
 
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'template')

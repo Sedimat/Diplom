@@ -95,5 +95,4 @@ class Coments(models.Model):
         verbose_name_plural = "Коментарі"
 
 
-
 # Create your models here.

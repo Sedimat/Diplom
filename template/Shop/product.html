@@ -50,13 +50,27 @@
     <p id="product_txt_big">{{ product.name }}</p>
     <p id="product_txt_big" >Ціна: {{ product.price }} грн</p>
     {% if user.is_authenticated %}
-        <form action="#" method="post">
+        <form action="{% url 'product' id=product.id %}" method="post">
             {% csrf_token %}
             <input type="number" id="inp_numb" name="quantity" value="1">
             <button type="submit" id="teg">До кошика</button>
         </form>
     {% else %}
-    <p id="product_txt_big">Авторизуйтесь щоб замовити товар!</p>
+
+    <table class="table_basket">
+        <tr  id="tr2">
+                <td width="100">Купити в один клік</td>
+        </tr>
+    </table>
+    <table class="table_basket">
+        <tr id="tr2">
+            <form method="POST" action="{% url 'sessio' id=product.id %}">
+                {% csrf_token %}
+                <td  width="30"><input type="number" id="inp_numb" name="quantity" value="1"></td>
+                <td><button type="submit" id="teg">До кошика</button></td>
+            </form>
+        </tr>
+    </table>
 
     {% endif %}
 
