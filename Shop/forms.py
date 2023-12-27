@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from .models import Products, ImgProduct, UserProfile, BufBasket, Coments
+from .models import Products, ImgProduct, UserProfile, BufBasket, Coments, NoUserListOrders
 
 
 class UserRegistrationForm(UserCreationForm):
@@ -38,3 +38,8 @@ class ComentsForm(forms.ModelForm):
     class Meta:
         model = Coments
         exclude = ('user', 'prod', 'published_date',)
+
+class NoUserListOrdersForm(forms.ModelForm):
+    class Meta:
+        model = NoUserListOrders
+        exclude = ('description', 'status', 'date', 'price',)

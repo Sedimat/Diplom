@@ -409,6 +409,14 @@ br {
     height: 40px;
 }
 
+#tr3{
+    height: 40px;
+    background-color: lightblue;
+    font-family: sans-serif;
+    border-radius: 5px;
+    font-size: 20px;
+}
+
 td{
     padding: 0px 0px 0px 10px;
 }

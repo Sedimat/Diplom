@@ -37,25 +37,24 @@
 
 {% block content %}
 <p class="form-label" >Замовлення:</p>
-{% for ord in list_orders %}
+{% for ord in no_user_list %}
 <table class="table_basket">
     <!-- Верхній рядок з заголовками (необов'язково) -->
     <tr id="tr2">
-        <th>№ {{ ord.6 }}</th>
-        <th>{{ ord.3 }}</th>
+        <th>№ {{ ord.7 }}</th>
+        <th>{{ ord.5 }}</th>
+        <th width="80"><a href="{% url 'status0' id=ord.7 stat=1 %}" id="del_bask1">Новий</a></th>
+        <th width="150"><a href="{% url 'status0' id=ord.7 stat=2 %}" id="del_bask1">В роботі</a></th>
+        <th width="80"><a href="{% url 'status0' id=ord.7 stat=3 %}" id="del_bask1">Виконаний</a></th>
 
-        <th width="80"><a href="{% url 'status' id=ord.6 stat=1 %}" id="del_bask1">Новий</a></th>
-        <th width="150"><a href="{% url 'status' id=ord.6 stat=2 %}" id="del_bask1">В роботі</a></th>
-        <th width="80"><a href="{% url 'status' id=ord.6 stat=3 %}" id="del_bask1">Виконаний</a></th>
-
-        {% if ord.2 == 1 %}
+        {% if ord.4 == 1 %}
             <th style="background-color: #08bf39; width:120px;">Новий</th>
-        {% elif ord.2 == 2 %}
+        {% elif ord.4 == 2 %}
             <th style="background-color: orange; width:120px;">В роботі</th>
-        {% elif ord.2 == 3 %}
+        {% elif ord.4 == 3 %}
             <th style="background-color: blue; width:120px;">Виконаний</th>
         {% else %}
-            {{ ord.2 }}
+            {{ ord.4 }}
         {% endif %}
     </tr>
 
@@ -70,10 +69,10 @@
                     <th width="70">Ціна</th>
                     <th width="70">Вартість</th>
                 </tr>
-                {% for i in ord.1 %}
+                {% for i in ord.0 %}
                 <tr id="tr1">
-                    <th><img class="prew" src="{{ i.5.img.url }}"><a id="product_txt" href="{% url 'product' id=i.6.id %}">{{  i.6 }}</a></th>
-                    <th>{{ i.1 }}</th>
+                    <th><img class="prew" src="{{ i.1.img.url }}"><a id="product_txt" href="{% url 'product' id=i.0.id %}">{{  i.0.name }}</a></th>
+                    <th>{{ i.4 }}</th>
                     <th>{{ i.2 }}</th>
                     <th>{{ i.3 }}</th>
                 </tr>
@@ -83,23 +82,23 @@
     <table class="table_basket">
         <tr id="tr1">
             <th>Id замовлення</th>
-            <th>{{ ord.6 }}</th>
+            <th>{{ ord.7 }}</th>
         </tr>
         <tr id="tr2">
             <th>Нікнейм замовника:</th>
-            <th>{{ ord.0 }}</th>
+            <th>{{ ord.1 }}</th>
         </tr>
         <tr id="tr1">
             <th>Ціна замовлення:</th>
-            <th>{{ ord.4 }} грн</th>
+            <th>{{ ord.6 }} грн</th>
         </tr>
         <tr id="tr2">
             <th>Телефон покупця:</th>
-            <th>{{ ord.5.phone }}</th>
+            <th>{{ ord.2 }}</th>
         </tr>
         <tr id="tr1">
             <th>Адрес покупця:</th>
-            <th>{{ ord.5.address }}</th>
+            <th>{{ ord.3 }}</th>
         </tr>
     </table>
 </details>

@@ -3,6 +3,7 @@
 {% block content %}
 
 <p id="product_txt_big">Кошик</p>
+<h1 id="product_txt_big">{{ error }}</h1>
 
 <table class="table_basket">
         <tr id="tr2">
@@ -26,12 +27,22 @@
         {% endfor %}
 </table>
 
-{% if no_user %}
+{% if no_user.1 > 0 %}
+<form method="POST" action="{% url 'no_user_orders' %}">
+    <table class="table_basket">
+        <tr>
+                {% csrf_token %}
+                <td  width="33%"><input type="text" id="tr3" name="name" placeholder="Ваше імя та фамілія"></td>
+                <td  width="33%"><input type="text" id="tr3" name="phone" placeholder="Ваш номер телефону"></td>
+                <td  width="33%"><input type="text" id="tr3" name="address" placeholder="Ваш адрес"></td>
+        </tr>
+    </table>
 <h2 id="sum_left"> Закальна вартість: {{ no_user.2 }} Грн</h2>
 <br>
 <h2 id="sum_left"> Кількість: {{ no_user.1 }} штук</h2>
 <br>
-<a id="order" href="{% url 'order' %}">Оформити замовлення</a>
+    <button type="submit" id="order">Оформити замовлення</button>
+</form>
 {% else %}
 <h2 id="sum_left">Ваш кошик порожній.</h2>
 {% endif %}

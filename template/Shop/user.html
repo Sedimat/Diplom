@@ -59,7 +59,8 @@
 
 {% if request.user.is_staff %}
     <a href="{% url 'creat' %}" id="del_bask">Добавити товар</a>
-<br>
+<hr>
+<h2 id="logo_text">Від користувачів</h2>
 <table class="table_basket">
         <tr id="tr1">
             <td><a href="{% url 'orders' id=1 %}" id="product_txt">Нові замовлення:</a></td>
@@ -72,6 +73,23 @@
         <tr id="tr1">
             <td><a href="{% url 'orders' id=3 %}" id="product_txt">Виконані:</a></td>
             <td style="background-color: blue;">{{ lend }}</td>
+        </tr>
+</table>
+
+<hr>
+<h2 id="logo_text">Без користувача</h2>
+<table class="table_basket">
+        <tr id="tr1">
+            <td><a href="{% url 'orders0' id=1 %}" id="product_txt">Нові замовлення:</a></td>
+            <td style="background-color: #08bf39;">{{ NUlnew }}</td>
+        </tr>
+        <tr id="tr1">
+            <td><a href="{% url 'orders0' id=2 %}" id="product_txt">В роботі:</a></td>
+            <td style="background-color: orange;">{{ NUlwork }}</td>
+        </tr>
+        <tr id="tr1">
+            <td><a href="{% url 'orders0' id=3 %}" id="product_txt">Виконані:</a></td>
+            <td style="background-color: blue;">{{ NUlend }}</td>
         </tr>
 </table>
 {% endif %}

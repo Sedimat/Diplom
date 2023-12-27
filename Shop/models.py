@@ -94,5 +94,21 @@ class Coments(models.Model):
         verbose_name = "Коментарі"
         verbose_name_plural = "Коментарі"
 
+class NoUserListOrders(models.Model):
+    name = models.CharField(max_length=100, verbose_name="ФІО")
+    phone = models.CharField(max_length=13, verbose_name="Телефон")
+    address = models.TextField(verbose_name="Адреса")
+    description = models.TextField(verbose_name="Замовлення")
+    status = models.PositiveIntegerField(default=1, verbose_name="Статус")
+    date = models.DateTimeField(auto_created=True, verbose_name="Час")
+    price = models.DecimalField(max_digits=10, decimal_places=2,default=1, verbose_name="Ціна замовлення")
+
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        verbose_name = "Замовлення в один клік"
+        verbose_name_plural = "Замовлення в один клік"
+
 
 # Create your models here.

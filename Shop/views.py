@@ -8,8 +8,9 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
-from .forms import UserRegistrationForm, UserProfileForm, BasketForm, ProductsForm, ImgProductForm, ComentsForm
-from .models import UserProfile, Products, ImgProduct, Category, BufBasket, ListOrders, Coments
+from .forms import UserRegistrationForm, UserProfileForm, BasketForm, ProductsForm, ImgProductForm, ComentsForm, \
+    NoUserListOrdersForm
+from .models import UserProfile, Products, ImgProduct, Category, BufBasket, ListOrders, Coments, NoUserListOrders
 
 
 # Create your views here.
@@ -17,12 +18,13 @@ from .models import UserProfile, Products, ImgProduct, Category, BufBasket, List
 def NoUserOrder(request):
     sess = request.session.get('sess')
     if sess == None:
-        return {}
+        return []
     len_order = []
     sum2 = 0
     prods = []
     lenProd = 0
     count = 0
+    print(lenProd)
     for i in sess:
         price = 0
         product = Products.objects.get(id=i[1])
@@ -30,11 +32,25 @@ def NoUserOrder(request):
         lenProd += i[0]
         price = product.price * i[0]
         sum2 += price
-        prods.append([product.name, imgs[0],product.price, i[0], price, count])
+        prods.append([product.name, imgs[0], product.price, i[0], price, count])
         count += 1
 
     len_order = [prods, lenProd, sum2]
     return {'no_user': len_order}
+
+
+def NoUserUpdateOrder(orders):
+    no_user_list = []
+    for i in orders:
+        desc = json.loads(i.description)
+        buf = []
+        for a in desc:
+            product = get_object_or_404(Products, id=a[1])
+            imgs = ImgProduct.objects.filter(product=product.id)
+            buf.append([product, imgs[0], a[2], a[3], a[0]])
+        no_user_list.append([buf, i.name, i.phone, i.address, i.status, i.date, i.price, i.id])
+    return {"no_user_list": no_user_list}
+
 
 def UpdateOrder(orders):
     list_orders = []
@@ -50,11 +66,19 @@ def UpdateOrder(orders):
         list_orders.append([i.user, a, i.status, i.date, i.price, user_profile, i.id])
     return list_orders
 
+
 def ListOrder():
     new = ListOrders.objects.filter(status=1).order_by("-date")  # сортує по даті додавання
     work = ListOrders.objects.filter(status=2).order_by("-date")  # сортує по даті додавання
     end = ListOrders.objects.filter(status=3).order_by("-date")  # сортує по даті додавання
     return {'new': new, 'work': work, 'end': end, 'lnew': len(new), 'lwork': len(work), 'lend': len(end)}
+
+
+def NoUserListOrder():
+    new = NoUserListOrders.objects.filter(status=1).order_by("-date")  # сортує по даті додавання
+    work = NoUserListOrders.objects.filter(status=2).order_by("-date")  # сортує по даті додавання
+    end = NoUserListOrders.objects.filter(status=3).order_by("-date")  # сортує по даті додавання
+    return {'NUnew': new, 'NUwork': work, 'NUend': end, 'NUlnew': len(new), 'NUlwork': len(work), 'NUlend': len(end)}
 
 
 def UserInfo(user):
@@ -63,6 +87,7 @@ def UserInfo(user):
         return info
     except:
         return False
+
 
 def BasketDict(user):
     basket2 = BufBasket.objects.filter(user=user)
@@ -81,12 +106,12 @@ def BasketDict(user):
             'all_price': all
         }
         basket.append(item)
-    return (basket,sum,)
+    return (basket, sum,)
+
 
 def index(request):
-
     client_ip = request.META.get('HTTP_X_FORWARDED_FOR', request.META.get('REMOTE_ADDR', None))
-    user_agent = request.META.get('HTTP_USER_AGENT', '') # додаткова інфа
+    user_agent = request.META.get('HTTP_USER_AGENT', '')  # додаткова інфа
     print(client_ip)
     category = Category.objects.all()
     products = Products.objects.all().order_by("-published_date")  # сортує по даті додавання
@@ -109,7 +134,7 @@ def index(request):
             "sum": basket[1],
             "user": user,
             "userinfo": userinfo
-            }
+        }
         context.update(Uinfo)
     else:
         context.update(NoUserOrder(request))
@@ -162,8 +187,11 @@ def product(request, id=None):
             "sum": basket[1],
             "user": user,
             "userinfo": userinfo
-            }
+        }
         context.update(Uinfo)
+    else:
+        context.update(NoUserOrder(request))
+
     return render(request, 'Shop/product.html', context=context)
 
 
@@ -195,7 +223,7 @@ def category(request, name=None, id=None):
             "sum": basket[1],
             "user": user,
             "userinfo": userinfo
-            }
+        }
         context.update(Uinfo)
     return render(request, 'Shop/category.html', context=context)
 
@@ -218,7 +246,7 @@ def user(request):
     if request.user.username:
         user = User.objects.get(username=request.user.username)
         orders = ListOrders.objects.filter(user=user).order_by("-date")
-        list_orders = UpdateOrder(orders) # Перетворений список
+        list_orders = UpdateOrder(orders)  # Перетворений список
         basket_buf = BasketDict(user)
 
         info = UserInfo(user)
@@ -233,6 +261,7 @@ def user(request):
             'sum': basket_buf[1]
         }
         context.update(ListOrder())
+        context.update(NoUserListOrder())
 
         return render(request, 'Shop/user.html', context=context)
 
@@ -277,7 +306,7 @@ def page(request, id=None):
             "sum": basket[1],
             "user": user,
             "userinfo": userinfo
-            }
+        }
         context.update(Uinfo)
     return render(request, 'Shop/index.html', context=context)
 
@@ -332,6 +361,10 @@ def orders(request, id=None):
     lnew = orders['lnew']
     lwork = orders['lwork']
     lend = orders['lend']
+    orders1 = NoUserListOrder()
+    NUlnew = orders1['NUlnew']
+    NUlwork = orders1['NUlwork']
+    NUlend = orders1['NUlend']
     buf_list = None
     if id == 1:
         buf_list = orders['new']
@@ -339,14 +372,18 @@ def orders(request, id=None):
         buf_list = orders['work']
     elif id == 3:
         buf_list = orders['end']
-    list_orders = list_orders = UpdateOrder(buf_list) # Перетворений список
+    list_orders = UpdateOrder(buf_list)  # Перетворений список
     context = {
         'lnew': lnew,
         'lwork': lwork,
         'lend': lend,
+        "NUlnew": NUlnew,
+        "NUlwork": NUlwork,
+        "NUlend": NUlend,
         'list_orders': list_orders,
     }
     return render(request, 'Shop/orders.html', context=context)
+
 
 def status(request, id=None, stat=None):
     order = ListOrders.objects.get(id=id)
@@ -375,11 +412,10 @@ def edit_profile(request, id=None, type=None):
     return redirect('user')
 
 
-
 def sessio(request, id=None):
     if request.method == "POST":
         quantity = int(request.POST.get('quantity'))
-        #request.session.flush() # видаляєму все
+        # request.session.flush() # видаляєму все
         # del request.session['sess'] # видаляє тільки цю сесію
         buf = request.session.get('sess')
         if buf == None:
@@ -390,10 +426,9 @@ def sessio(request, id=None):
                     i[0] += quantity
             request.session['sess'] = buf
         else:
-            buf.append([quantity,id])
+            buf.append([quantity, id])
             request.session['sess'] = buf
         print(request.session.get('sess'))
-
 
     return redirect('product', id=id)
 
@@ -412,3 +447,69 @@ def no_user_basket_del(request, id=None):
     sess = request.session.get('sess')
     sess.pop(id)
     return redirect('basket')
+
+
+def no_user_orders(request):
+    sess = request.session.get('sess')
+    if request.method == "POST":
+        order = NoUserListOrdersForm(request.POST)
+
+        if order.is_valid():
+            list_order = []
+            all_price = 0
+            for i in sess:
+                prod = Products.objects.get(id=i[1])
+                sum_price = i[0] * float(prod.price)
+                all_price += sum_price
+                list_order.append([i[0], i[1], float(prod.price), sum_price])
+
+            u_order = order.save(commit=False)
+            u_order.description = json.dumps(list_order)
+            u_order.status = 1
+            u_order.price = all_price
+            u_order.date = timezone.now()
+            u_order.save()
+            del request.session['sess']  # видаляє тільки цю сесію
+        else:
+            error = order.errors
+            context = {"error": error}
+            context.update(NoUserOrder(request))
+
+            return render(request, 'Shop/basket.html', context=context)
+
+    return redirect('basket')
+
+
+def orders0(request, id=None):
+    orders = ListOrder()
+    lnew = orders['lnew']
+    lwork = orders['lwork']
+    lend = orders['lend']
+    orders = NoUserListOrder()
+    NUlnew = orders['NUlnew']
+    NUlwork = orders['NUlwork']
+    NUlend = orders['NUlend']
+    buf_list = None
+    if id == 1:
+        buf_list = orders['NUnew']
+    elif id == 2:
+        buf_list = orders['NUwork']
+    elif id == 3:
+        buf_list = orders['NUend']
+    context = {
+        'lnew': lnew,
+        'lwork': lwork,
+        'lend': lend,
+        "NUlnew": NUlnew,
+        "NUlwork": NUlwork,
+        "NUlend": NUlend
+    }
+    context.update(NoUserUpdateOrder(buf_list))
+    return render(request, 'Shop/orders0.html', context=context)
+
+
+def status0(request, id=None, stat=None):
+    order = NoUserListOrders.objects.get(id=id)
+    order.status = stat
+    order.save()
+    return redirect('orders0', id=stat)
