@@ -1,6 +1,9 @@
 {% extends "Shop/base.html" %}
 
 {% block content1 %}
+
+{% if request.user.is_staff %}
+
 <h2 id="logo_text">Від користувачів</h2>
 <table class="table_basket">
         <tr id="tr1">
@@ -33,10 +36,15 @@
             <td style="background-color: blue;">{{ NUlend }}</td>
         </tr>
 </table>
+{% endif %}
+
 {% endblock %}
 
 {% block content %}
+
+{% if request.user.is_staff %}
 <p class="form-label" >Замовлення:</p>
+
 {% for ord in no_user_list %}
 <table class="table_basket">
     <!-- Верхній рядок з заголовками (необов'язково) -->
@@ -78,32 +86,40 @@
                 </tr>
                 {% endfor %}
   </table>
-
+    <form action="{% url 'address' id=ord.7 %}" method="POST">
+        {% csrf_token %}
     <table class="table_basket">
         <tr id="tr1">
-            <th>Id замовлення</th>
+            <th>№ замовлення</th>
             <th>{{ ord.7 }}</th>
         </tr>
-        <tr id="tr2">
-            <th>Нікнейм замовника:</th>
-            <th>{{ ord.1 }}</th>
+        <tr id="tr1">
+            <th>ФІО:</th>
+            <th><input style="width:500px;" type="text" class="table_basket1" name="name" value="{{  ord.1 }}"></th>
         </tr>
         <tr id="tr1">
             <th>Ціна замовлення:</th>
-            <th>{{ ord.6 }} грн</th>
+            <th><input style="width:500px;" type="text" class="table_basket1" name="price" value="{{  ord.6 }}"></th>
         </tr>
-        <tr id="tr2">
+        <tr id="tr1">
             <th>Телефон покупця:</th>
-            <th>{{ ord.2 }}</th>
+            <th><input style="width:500px;" type="text" class="table_basket1" name="phone" value="{{  ord.2  }}"></th>
         </tr>
         <tr id="tr1">
             <th>Адрес покупця:</th>
-            <th>{{ ord.3 }}</th>
+
+            <th>
+                <input style="width:500px;" type="text" class="table_basket1" name="address" value="{{  ord.3  }}">
+            </th>
         </tr>
     </table>
+        <button type="submit" id="order" >Змінити</button>
+    </form>
 </details>
 <hr>
 
 {% endfor %}
+
+{% endif %}
 
 {% endblock %}

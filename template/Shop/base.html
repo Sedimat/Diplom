@@ -20,9 +20,9 @@
         <div class="header">
             <ul id="logo1">
                 <li id="logo2"><a id="logo3" href="{% url 'index' %}">Головна</a></li>
-                <li id="logo2"><a id="logo3" href="#">Contact</a></li>
-                <li id="logo2"><a id="logo3" href="#">About</a></li>
-                <li id="logo2"><a id="logo3" href="{% url 'admin:index' %}">Admin</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'contact' %}">Контакти</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'about' %}">Про нас</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'user' %}">Користувач</a></li>
             </ul>
         </div>
 
@@ -32,6 +32,22 @@
 
 
 
+        </div>
+        <div class="field">
+            <table class="table_field">
+                <tr>
+                    <td height="40"><a id="logo3" href="{% url 'index' %}">Головна</a></td>
+                    <td width="300"><a id="logo3" href="{% url 'contact' %}">Контакти</a></td>
+                    <td width="300"><a id="logo3" href="{% url 'about' %}">Про нас</a></td>
+                    <td width="300">
+                        {% block basket %}
+
+                        {% endblock %}
+
+                    </td>
+                </tr>
+
+            </table>
         </div>
         <div class="center">
 
@@ -63,10 +79,10 @@
 
         <div class="footer">
             <ul id="logo1">
-                <li id="logo2"><a id="logo3" href="#">Main</a></li>
-                <li id="logo2"><a id="logo3" href="#">Shop</a></li>
-                <li id="logo2"><a id="logo3" href="#">About</a></li>
-                <li id="logo2"><a id="logo3" href="#">Contact</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'index' %}">Головна</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'contact' %}">Контакти</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'about' %}">Про нас</a></li>
+                <li id="logo2"><a id="logo3" href="{% url 'user' %}">Користувач</a></li>
             </ul>
         </div>
 

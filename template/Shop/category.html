@@ -6,9 +6,6 @@
 <img class="avatar" src="{{ userinfo.avatar.url }}" width="100">
 <a id="logo_text" href="{% url 'user' %}">{{ user.username }}</a>
 <a href="{% url 'logout' %}" id="del_1bask">Вийти</a>
-<a id="logo_text1"  href="{% url 'user' %}">Кошик</a>
-<p id="logo_text1" >Товарів: {{ basket }} штук</p>
-<p id="logo_text1" >Сума {{ sum }} грн </p>
 
 <br>
 {% else %}
@@ -16,19 +13,19 @@
 <form class="navbar-form navbar-right" method="POST" role="form" action="{% url 'login' %}">
     {% csrf_token %}
 
-    <input type="text" class="form-control" name="username" id="username0" placeholder="Ваш нікнейм">
+    <input type="text" class="table_basket1" name="username" id="username0" placeholder="Ваш нікнейм">
 
-    <input type="password" class="form-control" name="password" id="password0" placeholder="Пароль">
+    <input type="password" class="table_basket1" name="password" id="password0" placeholder="Пароль">
 
-    <button type="submit" class="rega">Війти</button>
+    <button type="submit" id="del_1bask">Війти</button>
 </form>
+<a id="del_3bask" style="background-color: #16496e;" href="{% url 'user' %}">Зареєеструватись</a>
 
 {% endif %}
 
 {% if request.user.is_staff %}
 
 {% endif %}
-
 
 
 {% for cat in category %}
@@ -61,13 +58,25 @@
 {% block content2 %}
 <table id="navi">
         <tr>
-            <td><a href="{% url 'category' name=name id=0 %}" id="button_left">1</a></td>
-            <td><a href="{% url 'category' name=name id=1 %}" id="button_left">2</a></td>
-            <td><a href="{% url 'category' name=name id=2 %}" id="button_left">3</a></td>
-
-            <td><a href="{% url 'category' name=name id=i %}" id="button_right">Наступна {{i}} / {{long}}</a></td>
+            <td><a href="{% url 'category' name=name id=i %}" id="button_right">Наступна</a></td>
 
         </tr>
 </table>
+
+{% endblock %}
+
+{% block basket %}
+
+{% if user.is_authenticated %}
+
+<a id="logo_text1"  href="{% url 'user' %}">Кошик</a>
+<p id="logo_text1" >Товарів: {{ basket }} штук</p>
+<p id="logo_text1" >Сума {{ sum }} грн </p>
+
+{% else %}
+<a id="logo_text1"  href="{% url 'basket' %}">Кошик</a>
+<p id="logo_text1" >Товарів: {{ no_user.1 }} штук</p>
+<p id="logo_text1" >Сума {{ no_user.2 }} грн </p>
+{% endif %}
 
 {% endblock %}

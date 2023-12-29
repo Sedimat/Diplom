@@ -1,6 +1,8 @@
 {% extends "Shop/base.html" %}
 
 {% block content1 %}
+{% if request.user.is_staff %}
+
 <h2 id="logo_text">Від користувачів</h2>
 <table class="table_basket">
         <tr id="tr1">
@@ -33,9 +35,14 @@
             <td style="background-color: blue;">{{ NUlend }}</td>
         </tr>
 </table>
+{% endif %}
+
 {% endblock %}
 
 {% block content %}
+
+{% if request.user.is_staff %}
+
 <p class="form-label" >Замовлення:</p>
 {% for ord in list_orders %}
 <table class="table_basket">
@@ -106,5 +113,7 @@
 <hr>
 
 {% endfor %}
+
+{% endif %}
 
 {% endblock %}

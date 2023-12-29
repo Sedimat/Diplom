@@ -6,6 +6,8 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('page/<int:id>', views.page, name='page'),
     path('user', views.user, name='user'),
+    path('about', views.about, name='about'),
+    path('contact', views.contact, name='contact'),
     path('order', views.order, name='order'),
     path('orders/<int:id>', views.orders, name='orders'),
     path('orders0/<int:id>', views.orders0, name='orders0'),
@@ -22,5 +24,6 @@ urlpatterns = [
     path("basket", views.basket, name='basket'),
     path("no_user_basket_del/<int:id>", views.no_user_basket_del, name="no_user_basket_del"),
     path("no_user_orders", views.no_user_orders, name="no_user_orders"),
+    path("address/<int:id>", views.address, name="address"),
 ]
 

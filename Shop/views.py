@@ -225,6 +225,9 @@ def category(request, name=None, id=None):
             "userinfo": userinfo
         }
         context.update(Uinfo)
+    else:
+        context.update(NoUserOrder(request))
+
     return render(request, 'Shop/category.html', context=context)
 
 
@@ -308,6 +311,8 @@ def page(request, id=None):
             "userinfo": userinfo
         }
         context.update(Uinfo)
+    else:
+        context.update(NoUserOrder(request))
     return render(request, 'Shop/index.html', context=context)
 
 
@@ -513,3 +518,35 @@ def status0(request, id=None, stat=None):
     order.status = stat
     order.save()
     return redirect('orders0', id=stat)
+
+
+def address(request, id=None,):
+    if request.method == "POST":
+        name = request.POST.get('name')
+        phone = request.POST.get('phone')
+        price = request.POST.get('price')
+        try:
+            price = float(price.replace(",", "."))
+        except:
+            buf = NoUserListOrders.objects.get(id=id)
+            price = buf.price
+        address = request.POST.get('address')
+        if name not in [None, ''] and phone not in [None, ''] and price not in [None, ''] and address not in [None, '']:
+            user_prof = NoUserListOrders.objects.get(id=id)
+            user_prof.name = name
+            user_prof.phone = phone
+            user_prof.price = price
+            user_prof.address = address
+            user_prof.save()
+
+    return redirect('orders0', id=1)
+
+
+def about(request):
+    context = {}
+    return render(request, 'Shop/about.html', context=context)
+
+
+def contact(request):
+    context = {}
+    return render(request, 'Shop/contact.html', context=context)

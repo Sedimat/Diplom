@@ -4,7 +4,7 @@
 
 {% if user.is_authenticated %}
 
-<img class="avatar" src="{{ info.avatar.url }}" width="100">
+<img class="avatar" src="{{ info.avatar.url }}" style=" width:100px;">
 <p id="logo_text" >{{ user.username }}</p>
 <a href="{% url 'logout' %}" id="del_1bask">Вийти</a>
 <form enctype="multipart/form-data" action="{% url 'edit_profile' id=user.id type=1 %}" method="POST">
@@ -59,7 +59,9 @@
 
 {% if request.user.is_staff %}
     <a href="{% url 'creat' %}" id="del_bask">Добавити товар</a>
-<hr>
+    <a href="{% url 'admin:index' %}" id="del_bask">Админ</a>
+<br>
+
 <h2 id="logo_text">Від користувачів</h2>
 <table class="table_basket">
         <tr id="tr1">
